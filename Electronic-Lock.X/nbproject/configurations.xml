@@ -4,6 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>button.h</itemPath>
+      <itemPath>motor.h</itemPath>
+      <itemPath>buzzer.h</itemPath>
+      <itemPath>resistor.h</itemPath>
+      <itemPath>rfid.h</itemPath>
+      <itemPath>internal_setting.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -12,6 +18,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>main.c</itemPath>
+      <itemPath>button.c</itemPath>
+      <itemPath>resistor.c</itemPath>
+      <itemPath>buzzer.c</itemPath>
+      <itemPath>rfid.c</itemPath>
+      <itemPath>motor.c</itemPath>
+      <itemPath>internal_setting.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
