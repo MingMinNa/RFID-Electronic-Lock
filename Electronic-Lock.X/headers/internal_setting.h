@@ -10,6 +10,8 @@
 # define _250kHz 0b010
 # define _125kHz 0b001
 
+#define _XTAL_FREQ 8000000
+
 // Timer
 void TMR1_init(int prescaler, int init_val);
 void TMR2_init(int prescaler, int postscaler, unsigned char _PR2);

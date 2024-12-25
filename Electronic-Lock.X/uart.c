@@ -1,6 +1,10 @@
 
 #include "headers/uart.h"
 #include <xc.h>
+#include <pic18f4520.h>
+
+char display_info[MAX_INFO_LEN];
+int info_len = 0;
 
 void uart_init(void) {
     
@@ -28,6 +32,9 @@ void uart_init(void) {
     // Receiver
     PIE1bits.RCIE = 1; // interrupte enable
     IPR1bits.RCIP = 0; // priority
+    
+    display_info[0] = '\0';
+    info_len = 0;
 }
 
 unsigned char uart_read(){
@@ -37,4 +44,17 @@ unsigned char uart_read(){
 void uart_write(unsigned char data){
     while(!TXSTAbits.TRMT);
     TXREG = data;
+}
+
+void clear_buffer(){
+    display_info[0] = '\0';
+    info_len = 0;
+}
+
+void screen_display(){
+    for(int i = 0; i < info_len; ++i){
+        uart_write(display_info[i]);
+    }
+    uart_write('\n');
+    clear_buffer();
 }

@@ -7,9 +7,10 @@
       <itemPath>headers/button.h</itemPath>
       <itemPath>headers/buzzer.h</itemPath>
       <itemPath>headers/internal_setting.h</itemPath>
-      <itemPath>headers/motor.h</itemPath>
       <itemPath>headers/resistor.h</itemPath>
       <itemPath>headers/uart.h</itemPath>
+      <itemPath>headers/rfid.h</itemPath>
+      <itemPath>headers/led.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -22,9 +23,10 @@
       <itemPath>button.c</itemPath>
       <itemPath>resistor.c</itemPath>
       <itemPath>buzzer.c</itemPath>
-      <itemPath>motor.c</itemPath>
       <itemPath>internal_setting.c</itemPath>
       <itemPath>uart.c</itemPath>
+      <itemPath>led.c</itemPath>
+      <itemPath>rfid.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -33,7 +35,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>headers</Elem>
+    <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

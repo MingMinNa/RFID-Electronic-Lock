@@ -2,10 +2,11 @@
 #include "headers/button.h"
 #include "headers/buzzer.h"
 #include "headers/internal_setting.h"
-#include "headers/motor.h"
 #include "headers/resistor.h"
 #include "headers/uart.h"
+#include "headers/led.h"
 #include <xc.h>
+#include <pic18f4520.h>
 
 // CONFIG1H
 #pragma config OSC = INTIO67      // Oscillator Selection bits (HS oscillator)
@@ -62,14 +63,37 @@
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot block (000000-0007FFh) not protected from table reads executed in other blocks)
 
-#define _XTAL_FREQ 8000000
+
+extern int resistor_value;
+extern unsigned char digit;
+
+
+/*
+ 1. Mode 1(LED1 is on) and LED2 is on 
+ * Registration Mode
+ 
+ 2. Mode 1(LED1 is on) and LED2 is off 
+ * Deregistration Mode
+ 
+ 3. Mode 2(LED1 is off) and LED2 is on
+ * Check Mode(Ready)
+ 
+ 4. Mode 2(LED1 is off) and LED2 is off
+ * Check Mode(Not Ready)
+ */
+int mode = 1;
 
 void main(void) {
     interrupt_init();
     oscillator_init(_8MHz);
-    
     //uart_init();
-    // button_init(1);
+    buzzer_init();
+    button_init(1);
+    resistor_init();
+    
+    led_init();
+    
+    
     while(1);
     return;
 }
@@ -79,7 +103,10 @@ void __interrupt(high_priority) H_ISR(){
     // INT0 Interrupt
     if(INTCONbits.INT0IF){
         
-        __delay_ms(30);
+        if(mode == 1){
+            led_output_digit(digit ^ (0b10));
+        }
+        __delay_ms(100);
         INTCONbits.INT0IF = 0;
     }
     
@@ -89,6 +116,27 @@ void __interrupt(high_priority) H_ISR(){
         
         __delay_us(30);
         INTCON3bits.INT1IF = 0;
+    }
+    
+    // ADC Interrupt(Variable Resistor)
+    if(PIR1bits.ADIF){
+        // Do something
+        resistor_value = ADRESH;
+        
+        if(resistor_value <= 128){
+            led_output_digit(digit | (0b01));
+            mode = 1;
+        }
+        else{
+            led_output_digit(0b10);
+            mode = 2;
+        }
+            
+        // ADC Interrupt completed
+        PIR1bits.ADIF = 0;
+        ADCON0bits.GO = 1;
+        // Delay by at least Tacq (Acquisition Time) 
+        __delay_us(100);
     }
     
     return;
@@ -102,7 +150,14 @@ void __interrupt(low_priority) L_ISR(){
             Nop();
             CREN = 1;   // Error completed
         }
+        unsigned char ret = rfid_read();
         
+        if(ret == 0){ // Operation Fail
+            buzzer_reject();
+        }
+        else{         // Operation Successful
+            buzzer_accept();
+        }
     }
     
     
@@ -112,7 +167,6 @@ void __interrupt(low_priority) L_ISR(){
         
         __delay_us(100);
         // TMR1 Interrupt completed
-        TMR1_restart();
         PIR1bits.TMR1IF = 0;
     }
     

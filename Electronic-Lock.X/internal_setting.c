@@ -2,14 +2,17 @@
 #include "headers/internal_setting.h"
 #include "headers/uart.h"
 #include <xc.h>
+#include <pic18f4520.h>
 
 // TMR1
 int TMR1_prescaler = 1;
 int TMR1_init_val = 0;
+int TMR1_repeat = 0;
 
 // TMR2
 int TMR2_prescaler = 1;
 int TMR2_postscaler = 1;
+int TMR2_repeat = 0;
 
 // Oscillator
 int Frequency = 0;
@@ -74,7 +77,6 @@ void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
     TMR2_postscaler = postscaler;
     
     PR2 = _PR2;
-    T2CONbits.TMR2ON = 1;
 }
 
 void TMR1_restart(){

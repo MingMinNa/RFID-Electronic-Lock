@@ -1,7 +1,10 @@
 #include "headers/internal_setting.h"
 #include "headers/resistor.h"
 #include <xc.h>
+#include <pic18f4520.h>
 
+
+int resistor_value = 0;
 // Variable Resistor
 void resistor_init(){
     TRISAbits.TRISA0 = 1;
@@ -24,16 +27,4 @@ void resistor_init(){
     IPR1bits.ADIP = 1;     
     
     ADCON0bits.GO = 1;
-}
-
-int get_resistor_value(){
-    
-    // Left Justified (ADFM = 0)
-    return ADRESH;
-    
-    // Right Justified (ADFM = 1)
-    /*
-    int val = ((ADRESH & 0b11) << 8) + ADRESL;
-       return val;
-       */
 }

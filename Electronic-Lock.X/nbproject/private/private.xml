@@ -5,10 +5,11 @@
         <group>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/main.c</file>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/buzzer.c</file>
-            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/button.c</file>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/uart.c</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/led.c</file>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/resistor.c</file>
-            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/motor.c</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/internal_setting.c</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock.X/rfid.c</file>
         </group>
     </open-files>
 </project-private>
