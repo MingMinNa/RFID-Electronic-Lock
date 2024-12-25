@@ -1,7 +1,7 @@
-#include "internal_setting.h"
-#include "buzzer.h"
+#include "headers/internal_setting.h"
+#include "headers/buzzer.h"
 #include <xc.h>
 
-void main(void) {
+void buzzer_init() {
     return;
 }

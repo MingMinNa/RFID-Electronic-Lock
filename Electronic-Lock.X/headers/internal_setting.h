@@ -11,13 +11,12 @@
 # define _125kHz 0b001
 
 // Timer
-void TMR1_init();
-void TMR2_init();
-void restart_TMR1();
+void TMR1_init(int prescaler, int init_val);
+void TMR2_init(int prescaler, int postscaler, unsigned char _PR2);
+void TMR1_restart();
 
 // CCP
 void CCP1_init();
-void CCP2_init();
 
 // Oscillator
 void oscillator_init(int frequency);

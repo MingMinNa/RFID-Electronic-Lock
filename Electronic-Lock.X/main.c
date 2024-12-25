@@ -1,10 +1,10 @@
 
-#include "button.h"
-#include "buzzer.h"
-#include "internal_setting.h"
-#include "motor.h"
-#include "resistor.h"
-#include "rfid.h"
+#include "headers/button.h"
+#include "headers/buzzer.h"
+#include "headers/internal_setting.h"
+#include "headers/motor.h"
+#include "headers/resistor.h"
+#include "headers/uart.h"
 #include <xc.h>
 
 // CONFIG1H
@@ -62,13 +62,68 @@
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot block (000000-0007FFh) not protected from table reads executed in other blocks)
 
-
-#define _XTAL_FREQ 
+#define _XTAL_FREQ 8000000
 
 void main(void) {
+    interrupt_init();
+    oscillator_init(_8MHz);
     
-    
-    
+    //uart_init();
+    // button_init(1);
     while(1);
+    return;
+}
+
+/* Interrupt Handlers */
+void __interrupt(high_priority) H_ISR(){
+    // INT0 Interrupt
+    if(INTCONbits.INT0IF){
+        
+        __delay_ms(30);
+        INTCONbits.INT0IF = 0;
+    }
+    
+    // INT1 Interrupt
+    if(INTCON3bits.INT1IF){
+        
+        
+        __delay_us(30);
+        INTCON3bits.INT1IF = 0;
+    }
+    
+    return;
+}
+
+void __interrupt(low_priority) L_ISR(){
+    // UART Read Interrupt
+    if(PIR1bits.RCIF){
+        if(RCSTAbits.OERR){
+            CREN = 0;   // Error happend
+            Nop();
+            CREN = 1;   // Error completed
+        }
+        
+    }
+    
+    
+    // TMR1 Interrupt
+    if (PIR1bits.TMR1IF) {
+        // Do something
+        
+        __delay_us(100);
+        // TMR1 Interrupt completed
+        TMR1_restart();
+        PIR1bits.TMR1IF = 0;
+    }
+    
+    // TMR2 Interrupt
+    if (PIR1bits.TMR2IF) {
+        // Do something
+        
+        __delay_us(100);
+        // TMR2 Interrupt completed
+        PIR1bits.TMR2IF = 0;
+    }
+    
     return;
 }

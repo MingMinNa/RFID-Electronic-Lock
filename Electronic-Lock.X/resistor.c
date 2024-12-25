@@ -1,22 +1,22 @@
-#include "internal_setting.h"
-#include "resistor.h"
+#include "headers/internal_setting.h"
+#include "headers/resistor.h"
 #include <xc.h>
 
 // Variable Resistor
 void resistor_init(){
     TRISAbits.TRISA0 = 1;
     
-    ADCON1bits.VCFG0 = 0;   // Voltage Reference Configuration Bit: use Vdd as reference voltage(V-)
-    ADCON1bits.VCFG1 = 0;   // Voltage Reference Configuration Bit: use Vss as reference voltage(V+)
-    ADCON1bits.PCFG = 0x0E; // A/D Port Configuration Control Bit: AN0(analog), others(digital)
+    ADCON1bits.VCFG0 = 0;   // use Vdd as reference voltage(V-)
+    ADCON1bits.VCFG1 = 0;   // use Vss as reference voltage(V+)
+    ADCON1bits.PCFG = 0x0E; // AN0(analog), others(digital)
     
     
-    ADCON2bits.ADCS = 0b000; // A/D Conversion Clock Select Bit: TAD = Fosc/2
-    ADCON2bits.ACQT = 0b001; // ADC Acquisition Time Select Bit: Tacq = 0b001
-    ADCON2bits.ADFM = 0;     //left justified (If use right justified, please change Get_Resistor_Value function)
+    ADCON2bits.ADCS = 0b000; // TAD = Fosc/2
+    ADCON2bits.ACQT = 0b001; // Tacq = 0b001
+    ADCON2bits.ADFM = 0;     // left justified (If use right justified, please change "get_resistor_value" function)
     
-    ADCON0bits.CHS = 0b0000; // Analog Channel Select Bit: choose AN0
-    ADCON0bits.ADON = 1;     // ADC On Bit: turn on ADC
+    ADCON0bits.CHS = 0b0000; // choose AN0
+    ADCON0bits.ADON = 1;     // turn on ADC
     
     interrupt_init();
     PIE1bits.ADIE = 1;
@@ -26,7 +26,7 @@ void resistor_init(){
     ADCON0bits.GO = 1;
 }
 
-int get_resistor_value(void){
+int get_resistor_value(){
     
     // Left Justified (ADFM = 0)
     return ADRESH;

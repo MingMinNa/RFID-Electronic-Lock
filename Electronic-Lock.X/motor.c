@@ -1,5 +1,5 @@
-#include "internal_setting.h"
-#include "motor.h"
+#include "headers/internal_setting.h"
+#include "headers/motor.h"
 #include <xc.h>
 
 // In internal_setting.c
@@ -11,19 +11,12 @@ int current_degree = 0;
 void motor_init(){
 
     // Call Oscillator_Initialize before using Motor
-    /* Oscillator_Initialize(_500kHz); */
-    CCP2_init();
+    CCP1_init();
     
-    // RC1/CCP2 -> Output
     TRISCbits.TRISC1 = 0;
     LATCbits.LATC1 = 0;
     
     // Set up PR2, CCP to decide PWM period and Duty Cycle
-    /*
-    * PWM period: P.151
-    * = (PR2 + 1) * 4 * Tosc * (TMR2 prescaler)
-    */
-    
     switch(Frequency){
         case _8MHz:
             // No Use This Oscillator Frequency
@@ -65,8 +58,6 @@ void motor_init(){
         default:
             break;
     }
-    
-    // initialize the motor to degree 0
     set_degree(0);
     
 }
@@ -116,8 +107,8 @@ void set_degree(int degree){
             break;
     }
     
-    CCPR2L = ((unsigned char)(corresponding_mus)) / 4;
-    CCP2CONbits.DC2B = ((unsigned char)(corresponding_mus)) % 4;
+    CCPR1L = ((unsigned char)(corresponding_mus)) / 4;
+    CCP1CONbits.DC1B = ((unsigned char)(corresponding_mus)) % 4;
     current_degree = degree;
     
     return;

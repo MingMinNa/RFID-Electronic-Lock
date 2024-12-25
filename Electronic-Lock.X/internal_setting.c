@@ -1,14 +1,17 @@
 
-#include "internal_setting.h"
+#include "headers/internal_setting.h"
+#include "headers/uart.h"
 #include <xc.h>
 
-
+// TMR1
 int TMR1_prescaler = 1;
 int TMR1_init_val = 0;
 
+// TMR2
 int TMR2_prescaler = 1;
 int TMR2_postscaler = 1;
 
+// Oscillator
 int Frequency = 0;
 
 /* Timer */
@@ -74,7 +77,7 @@ void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
     T2CONbits.TMR2ON = 1;
 }
 
-void restart_TMR1(){
+void TMR1_restart(){
     T1CONbits.TMR1ON = 0;
     TMR1H = (unsigned char)(TMR1_init_val / 0xFF);
     TMR1L = (unsigned char)(TMR1_init_val % 0xFF);
@@ -83,19 +86,13 @@ void restart_TMR1(){
 
 
 /* CCP */
-// For RFID
 void CCP1_init(){
-    
+    CCP1CONbits.CCP1M = 0b1100;
 }
 
-// For Motor
-void CCP2_init(){
-    CCP2CONbits.CCP2M = 0b1100;
-}
 
 /* Oscillator */
 void oscillator_init(int frequency){
-    // OSCCON: P.32
     Frequency = frequency;
     IRCF2 = (unsigned char)(frequency / 4) % 2;
     IRCF1 = (unsigned char)(frequency / 2) % 2;
@@ -108,60 +105,16 @@ void interrupt_init(){
     INTCONbits.GIEH = 1;    //enable high priority interrupt
     INTCONbits.GIEL = 1;    //enable low priority interrupt
 }
+
 void INT0_open(){
     // INT0 is high priority interrupt
     INTCONbits.INT0IF = 0;
     INTCONbits.INT0IE = 1;
 }
+
 void INT1_open(){
     // set INT1 as high priority interrupt currently
     INTCON3bits.INT1IF = 0;
     INTCON3bits.INT1IE = 1;
     INTCON3bits.INT1IP = 1;
-}
-
-/* Interrupt Handlers */
-void __interrupt(high_priority) H_ISR(){
-    
-    if(INTCONbits.INT0IF){
-        
-        
-        __delay_us(30);
-        INTCONbits.INT0IF = 0;
-    }
-    
-    if(INTCON3bits.INT1IF){
-        
-        
-        __delay_us(30);
-        INTCON3bits.INT1IF = 0;
-    }
-    
-    return;
-}
-
-void __interrupt(low_priority) L_ISR(){
-    
-     // TMR1 Interrupt
-    if (PIR1bits.TMR1IF) 
-    {
-        // Do something
-        
-        __delay_us(100);
-        // TMR1 Interrupt completed
-        restart_TMR1();
-        PIR1bits.TMR1IF = 0;
-    }
-    
-    // TMR2 Interrupt
-    if (PIR1bits.TMR2IF) 
-    {
-        // Do something
-        
-        __delay_us(100);
-        // TMR2 Interrupt completed
-        PIR1bits.TMR2IF = 0;
-    }
-    
-    return;
 }

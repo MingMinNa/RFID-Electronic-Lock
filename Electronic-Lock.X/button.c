@@ -1,16 +1,21 @@
-#include "button.h"
-#include "internal_setting.h"
+#include "headers/button.h"
+#include "headers/internal_setting.h"
 #include <xc.h>
 
-void Button_Initialize(int use_Interrupt){
+void button_init(int use_Interrupt){
     
-    ADCON1 = 0x0E;          // must change 
+    ADCON1 = 0x0E;
     TRISBbits.TRISB1 = 1;
     LATBbits.LATB1 = 0;
     
-    // if use_Interrupt != 0, use INT1
+    // if use_Interrupt != 0, use INT0
     if (use_Interrupt != 0){
         interrupt_init();
-        INT1_open();
+        INT0_open();
     }
+}
+
+// the function is used when check the button pressed by using polling(busy waiting) 
+unsigned char button_pressed(){
+    return (PORTBbits.RB0 == 0);
 }
