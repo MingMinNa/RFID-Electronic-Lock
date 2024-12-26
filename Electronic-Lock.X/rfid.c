@@ -59,15 +59,18 @@ unsigned char rfid_read(){
             input_ID[10] = '\0';
         input_len = strlen(input_ID);
         
+        unsigned char ret;
         if(digit == 0b11){      // Registration Mode
-            return insert_ID();
+            ret = insert_ID();
         }
         else if(digit == 0b01){ // Deregistration Mode
-            return remove_ID();
+            ret = remove_ID();
         }
         else if(digit == 0b10){ // Check Mode(Ready)
-            return check_ID();
+            ret = check_ID();
         }
+        input_ID[0] = '\0';
+        input_len = 0;
     }
     return -1;
 }
