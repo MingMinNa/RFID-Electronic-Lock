@@ -31,7 +31,7 @@ void TMR1_init(int prescaler, int init_val){
     */
     
     PIR1bits.TMR1IF = 0; 
-    IPR1bits.TMR1IP = 0;  
+    IPR1bits.TMR1IP = 1;  
     PIE1bits.TMR1IE = 1; 
     
     TMR1H = (unsigned char)(init_val / 0xFF);
@@ -63,7 +63,7 @@ void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
     */
     
     PIR1bits.TMR2IF = 0; 
-    IPR1bits.TMR2IP = 0;  
+    IPR1bits.TMR2IP = 1;  
     PIE1bits.TMR2IE = 1; 
     
     // prescaler: 1 ~ 16, postscaler: 1, 4, 16
@@ -112,11 +112,4 @@ void INT0_open(){
     // INT0 is high priority interrupt
     INTCONbits.INT0IF = 0;
     INTCONbits.INT0IE = 1;
-}
-
-void INT1_open(){
-    // set INT1 as high priority interrupt currently
-    INTCON3bits.INT1IF = 0;
-    INTCON3bits.INT1IE = 1;
-    INTCON3bits.INT1IP = 1;
 }

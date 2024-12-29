@@ -4,6 +4,7 @@
 #include "headers/internal_setting.h"
 #include "headers/resistor.h"
 #include "headers/uart.h"
+#include "headers/rfid.h"
 #include "headers/led.h"
 #include <xc.h>
 #include <pic18f4520.h>
@@ -86,13 +87,13 @@ int mode = 1;
 void main(void) {
     interrupt_init();
     oscillator_init(_8MHz);
-    //uart_init();
+    
     buzzer_init();
+    led_init();
     button_init(1);
     resistor_init();
-    
-    led_init();
-    
+    rfid_init();
+    // uart_init();
     
     while(1);
     return;
@@ -108,14 +109,6 @@ void __interrupt(high_priority) H_ISR(){
         }
         __delay_ms(100);
         INTCONbits.INT0IF = 0;
-    }
-    
-    // INT1 Interrupt
-    if(INTCON3bits.INT1IF){
-        
-        
-        __delay_us(30);
-        INTCON3bits.INT1IF = 0;
     }
     
     // ADC Interrupt(Variable Resistor)
@@ -139,27 +132,21 @@ void __interrupt(high_priority) H_ISR(){
         __delay_us(100);
     }
     
-    return;
-}
-
-void __interrupt(low_priority) L_ISR(){
     // UART Read Interrupt
-    if(PIR1bits.RCIF){
+    if(RCIF){
         if(RCSTAbits.OERR){
             CREN = 0;   // Error happend
             Nop();
             CREN = 1;   // Error completed
         }
         unsigned char ret = rfid_read();
-        
-        if(ret == 0){ // Operation Fail
-            buzzer_reject();
-        }
-        else{         // Operation Successful
+        if(ret == 1){       // Operation Successful
             buzzer_accept();
         }
+        else if(ret == 2){  // Operation Fail
+            buzzer_reject();
+        }
     }
-    
     
     // TMR1 Interrupt
     if (PIR1bits.TMR1IF) {
@@ -178,6 +165,11 @@ void __interrupt(low_priority) L_ISR(){
         // TMR2 Interrupt completed
         PIR1bits.TMR2IF = 0;
     }
+    
+    return;
+}
+
+void __interrupt(low_priority) L_ISR(){
     
     return;
 }
