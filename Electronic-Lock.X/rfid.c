@@ -22,13 +22,12 @@ int input_len = 0;
 int start_idx = 0;
 int end_idx = 1;
 
-void rfid_init(){
+void rfid_init(){    
     start_idx = 0;
     end_idx = 1;
     for(int i = 0; i < MAX_STORAGE; ++i){
         database[i][0] = '\0';
     }
-    uart_init();
 }
 
 unsigned char database_empty(){

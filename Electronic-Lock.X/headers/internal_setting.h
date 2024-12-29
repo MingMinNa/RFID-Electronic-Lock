@@ -26,7 +26,6 @@ void oscillator_init(int frequency);
 // Interrupt
 void interrupt_init();
 void INT0_open();
-void INT1_open();
 
 #endif	/* INTERRUPT_H */
 

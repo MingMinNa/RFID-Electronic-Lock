@@ -92,8 +92,8 @@ void main(void) {
     led_init();
     button_init(1);
     resistor_init();
+    uart_init();
     rfid_init();
-    // uart_init();
     
     while(1);
     return;
