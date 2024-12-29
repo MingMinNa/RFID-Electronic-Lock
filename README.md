@@ -5,7 +5,8 @@
 <details>
   <summary>RDM6300</summary>
 
-  ![RDM6300 PINOUT](./Diagrams/RFID%20RDM6300%20Pinout%20Diagram.png){width=100}![RDM6300 Coil](./Diagrams/RDM6300%20Copper%20Coil.jpg){width=100}
+  <img src="./Diagrams/RFID%20RDM6300%20Pinout%20Diagram.png" alt="RDM6300 PINOUT" width="280">
+  <img src="./Diagrams/RDM6300%20Copper%20Coil.jpg" alt="RDM6300 Coil" width="200">
 
   |  RDM6300 |  Coil  | PIC18F4520 |
   |----------- |----------- |------------|
@@ -30,13 +31,13 @@
 
   |  LED1 | PIC18F4520 |
   |----------- |------------|
-  | ``Long Lag``  | ``RA1/AN1`` → ``Resistor`` → ``Long Lag``|
-  | ``Short Lag``  | ``Vss``|
+  | ``Long Leg``  | ``RA1/AN1`` → ``Resistor`` → ``Long Lag``|
+  | ``Short Leg``  | ``Vss``|
 
   |  LED2 | PIC18F4520 |
   |----------- |------------|
-  | ``Long Lag``  | ``RA2/AN2`` → ``Resistor`` → ``Long Lag``|
-  | ``Short Lag``  | ``Vss``|
+  | ``Long Leg``  | ``RA2/AN2`` → ``Resistor`` → ``Long Lag``|
+  | ``Short Leg``  | ``Vss``|
 
 </details>
 <details>
