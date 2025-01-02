@@ -11,7 +11,6 @@ void led_init(){
     digit = 0b11;
     LATAbits.LATA1 = digit % 2;
     LATAbits.LATA2 = (digit / 2) % 2;
-    
 }
 
 void led_output_digit(unsigned char _digit){

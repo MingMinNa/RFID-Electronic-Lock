@@ -50,6 +50,13 @@ void TMR1_init(int prescaler, int init_val){
     T1CONbits.TMR1ON = 1;
 }
 
+void TMR1_restart(){
+    T1CONbits.TMR1ON = 0;
+    TMR1H = (unsigned char)(TMR1_init_val / 0xFF);
+    TMR1L = (unsigned char)(TMR1_init_val % 0xFF);
+    T1CONbits.TMR1ON = 1;
+}
+
 void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
     /*
     delay 0.5s(TMR2_Interrupt) in different oscillator frequency
@@ -77,13 +84,6 @@ void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
     TMR2_postscaler = postscaler;
     
     PR2 = _PR2;
-}
-
-void TMR1_restart(){
-    T1CONbits.TMR1ON = 0;
-    TMR1H = (unsigned char)(TMR1_init_val / 0xFF);
-    TMR1L = (unsigned char)(TMR1_init_val % 0xFF);
-    T1CONbits.TMR1ON = 1;
 }
 
 

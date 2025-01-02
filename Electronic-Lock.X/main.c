@@ -6,6 +6,7 @@
 #include "headers/uart.h"
 #include "headers/rfid.h"
 #include "headers/led.h"
+#include "string.h"
 #include <xc.h>
 #include <pic18f4520.h>
 
@@ -80,6 +81,8 @@
  */
 int mode = 1;
 extern unsigned char digit;
+extern char display_info[MAX_INFO_LEN];
+extern int info_len;
 
 void main(void) {
     interrupt_init();
@@ -119,6 +122,22 @@ void __interrupt(high_priority) H_ISR(){
         INTCONbits.INT0IF = 0;
     }
     
+    /* UART Read Interrupt */
+    if(RCIF){
+        if(RCSTAbits.OERR){
+            CREN = 0;   // Error happend
+            Nop();
+            CREN = 1;   // Error completed
+        }
+        unsigned char ret = rfid_read();
+        if(ret == 1){       // Operation Successful
+            buzzer_accept();
+        }
+        else if(ret == 2){  // Operation Fail
+            buzzer_reject();
+        }
+    }
+    
     /* TMR1 Interrupt */
     if (PIR1bits.TMR1IF) {
         // Do something
@@ -141,22 +160,6 @@ void __interrupt(high_priority) H_ISR(){
 }
 
 void __interrupt(low_priority) L_ISR(){
-    
-    /* UART Read Interrupt */
-    if(RCIF){
-        if(RCSTAbits.OERR){
-            CREN = 0;   // Error happend
-            Nop();
-            CREN = 1;   // Error completed
-        }
-        unsigned char ret = rfid_read();
-        if(ret == 1){       // Operation Successful
-            buzzer_accept();
-        }
-        else if(ret == 2){  // Operation Fail
-            buzzer_reject();
-        }
-    }
     
     return;
 }

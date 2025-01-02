@@ -32,7 +32,7 @@ void uart_init(void) {
 
     // Receiver
     PIE1bits.RCIE = 1; // interrupte enable
-    IPR1bits.RCIP = 0; // priority
+    IPR1bits.RCIP = 1; // priority
     
     display_info[0] = '\0';
     info_len = 0;

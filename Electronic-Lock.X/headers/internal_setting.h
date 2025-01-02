@@ -14,8 +14,8 @@
 
 // Timer
 void TMR1_init(int prescaler, int init_val);
-void TMR2_init(int prescaler, int postscaler, unsigned char _PR2);
 void TMR1_restart();
+void TMR2_init(int prescaler, int postscaler, unsigned char _PR2);
 
 // CCP
 void CCP1_init();

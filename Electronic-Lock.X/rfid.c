@@ -6,7 +6,7 @@
 #include <xc.h>
 #include <pic18f4520.h>
 
-#define MAX_STORAGE 9
+#define MAX_STORAGE 5
 #define MAX_ID_LEN 15
 
 extern char display_info[MAX_INFO_LEN];
@@ -19,24 +19,25 @@ extern unsigned char digit;
 char database[MAX_STORAGE][MAX_ID_LEN];
 char input_ID[MAX_ID_LEN];
 int input_len = 0;
-int start_idx = 0;
-int end_idx = 1;
+int end_idx = 0;
 
-void rfid_init(){    
-    start_idx = 0;
-    end_idx = 1;
+void rfid_init(){   
+    end_idx = 0;
     
     for(int i = 0; i < MAX_STORAGE; ++i){
-        database[i][0] = '\0';
+        for(int j = 0; j < MAX_ID_LEN; ++j)
+            database[i][j] = '\0';
     }
+    for(int i = 0; i < MAX_ID_LEN; ++i)
+        input_ID[i] = '\0';
 }
 
 unsigned char database_empty(){
-    return (start_idx + 1) % (MAX_STORAGE) == end_idx;
+    return end_idx == 0;
 }
 
 unsigned char database_full(){
-    return (start_idx == end_idx);
+    return (end_idx >= MAX_STORAGE);
 }
 
 unsigned char rfid_read(){
@@ -53,9 +54,22 @@ unsigned char rfid_read(){
     }
     
     if(reach_end){
-        // TODO
         // add error detection by checking the checksum
         
+        unsigned char checksum = 0;
+        
+        for(int i = 0; i < 10; i += 2){
+            unsigned char byte = (input_ID[i * 2] - '0') * 16 + (input_ID[i * 2 + 1] - '0');
+            checksum ^= byte;
+        }
+        unsigned char check_byte = (input_ID[10] - '0') * 16 + (input_ID[11] - '0');
+//        if(checksum != check_byte){
+//            strcpy(display_info, "The checksum is invalid! Please scan again");
+//            info_len = (int)strlen(display_info);
+//            screen_display();
+//            return 2;
+//        }
+            
         if(input_len >= MAX_ID_LEN)
             input_ID[MAX_ID_LEN - 1] = '\0';
         input_len = (int)strlen(input_ID);
@@ -70,7 +84,8 @@ unsigned char rfid_read(){
         else if(digit == 0b10){ // Check Mode(Ready)
             ret = check_ID();
         }
-        input_ID[0] = '\0';
+        for(int i = 0; i < MAX_ID_LEN; ++i)
+            input_ID[i] = '\0';
         input_len = 0;
         
         // 1:success & 2: fail
@@ -98,7 +113,7 @@ unsigned char insert_ID(){
         strcpy(display_info, "New User ID:");
         ret_status = 1;
         strcpy(database[end_idx], input_ID);
-        end_idx = (end_idx + 1) % MAX_STORAGE;
+        end_idx ++;
     }
     info_len = (int)strlen(display_info);
     for(int i = 0; input_ID[i] != '\0'; ++i)
@@ -125,12 +140,9 @@ unsigned char remove_ID(){
         strcpy(display_info, "Remove ID:");
         ret_status = 1;
         
-        // end_idx = end_idx - 1
-        end_idx = (end_idx + MAX_STORAGE - 1) % MAX_STORAGE;
-        int next_i;
-        for(int i = idx; i != end_idx; i = next_i){
-            next_i = (i + 1) % MAX_STORAGE;
-            strcpy(database[i], database[next_i]);
+        end_idx = end_idx - 1;
+        for(int i = idx; i < end_idx; i++){
+            strcpy(database[i], database[i + 1]);
         }
     }
     
@@ -160,7 +172,7 @@ unsigned char check_ID(){
 }
 
 int find_ID(){
-    for(int i = (start_idx + 1) % MAX_STORAGE; i != end_idx; i = (i + 1) % MAX_STORAGE){
+    for(int i = 0; i < end_idx; i ++){
         if(strcmp(database[i], input_ID) == 0)
             return i;
     }
