@@ -65,10 +65,6 @@
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot block (000000-0007FFh) not protected from table reads executed in other blocks)
 
 
-extern int resistor_value;
-extern unsigned char digit;
-
-
 /*
  1. Mode 1(LED1 is on) and LED2 is on 
  * Registration Mode
@@ -83,6 +79,7 @@ extern unsigned char digit;
  * Check Mode(Not Ready)
  */
 int mode = 1;
+extern unsigned char digit;
 
 void main(void) {
     interrupt_init();
@@ -95,13 +92,24 @@ void main(void) {
     uart_init();
     rfid_init();
     
-    while(1);
+    while(1){
+        /* Variable Resistor */
+        int resistor_value = get_resistor_value();
+        if(resistor_value <= 128){
+            led_output_digit(digit | (0b01));
+            mode = 1;
+        }
+        else{
+            led_output_digit(0b10);
+            mode = 2;
+        }
+    }
     return;
 }
 
 /* Interrupt Handlers */
 void __interrupt(high_priority) H_ISR(){
-    // INT0 Interrupt
+    /* INT0 Interrupt */
     if(INTCONbits.INT0IF){
         
         if(mode == 1){
@@ -111,28 +119,30 @@ void __interrupt(high_priority) H_ISR(){
         INTCONbits.INT0IF = 0;
     }
     
-    // ADC Interrupt(Variable Resistor)
-    if(PIR1bits.ADIF){
+    /* TMR1 Interrupt */
+    if (PIR1bits.TMR1IF) {
         // Do something
-        resistor_value = ADRESH;
         
-        if(resistor_value <= 128){
-            led_output_digit(digit | (0b01));
-            mode = 1;
-        }
-        else{
-            led_output_digit(0b10);
-            mode = 2;
-        }
-            
-        // ADC Interrupt completed
-        PIR1bits.ADIF = 0;
-        ADCON0bits.GO = 1;
-        // Delay by at least Tacq (Acquisition Time) 
         __delay_us(100);
+        // TMR1 Interrupt completed
+        PIR1bits.TMR1IF = 0;
     }
     
-    // UART Read Interrupt
+    /* TMR2 Interrupt */
+    if (PIR1bits.TMR2IF) {
+        // Do something
+        
+        __delay_us(100);
+        // TMR2 Interrupt completed
+        PIR1bits.TMR2IF = 0;
+    }
+    
+    return;
+}
+
+void __interrupt(low_priority) L_ISR(){
+    
+    /* UART Read Interrupt */
     if(RCIF){
         if(RCSTAbits.OERR){
             CREN = 0;   // Error happend
@@ -147,29 +157,6 @@ void __interrupt(high_priority) H_ISR(){
             buzzer_reject();
         }
     }
-    
-    // TMR1 Interrupt
-    if (PIR1bits.TMR1IF) {
-        // Do something
-        
-        __delay_us(100);
-        // TMR1 Interrupt completed
-        PIR1bits.TMR1IF = 0;
-    }
-    
-    // TMR2 Interrupt
-    if (PIR1bits.TMR2IF) {
-        // Do something
-        
-        __delay_us(100);
-        // TMR2 Interrupt completed
-        PIR1bits.TMR2IF = 0;
-    }
-    
-    return;
-}
-
-void __interrupt(low_priority) L_ISR(){
     
     return;
 }

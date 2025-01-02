@@ -4,7 +4,6 @@
 #include <pic18f4520.h>
 
 void buzzer_init() {
-    
     TMR2_init(16, 1, 124);
     
     CCP1CONbits.CCP1M = 0b1100;
@@ -16,12 +15,10 @@ void buzzer_init() {
 }
 
 void buzzer_on(unsigned char accept){
-    if(accept == 1){
+    if(accept == 1)
         PR2 = 100;
-    }
-    else{
+    else
         PR2 = 255;
-    }
     CCPR1L = 62;
 }
 

@@ -26,12 +26,13 @@ void uart_init(void) {
     RCSTAbits.CREN = 1;
 
     // Transmitter 
-    PIE1bits.TXIE = 1; // interrupte enable
-    IPR1bits.TXIP = 1; // priority  
+    // No use transmitter interrupt
+    // PIE1bits.TXIE = 1; // interrupte enable
+    // IPR1bits.TXIP = 1; // priority  
 
     // Receiver
     PIE1bits.RCIE = 1; // interrupte enable
-    IPR1bits.RCIP = 1; // priority
+    IPR1bits.RCIP = 0; // priority
     
     display_info[0] = '\0';
     info_len = 0;

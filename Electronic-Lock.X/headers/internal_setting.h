@@ -21,7 +21,7 @@ void TMR1_restart();
 void CCP1_init();
 
 // Oscillator
-void oscillator_init(int frequency);
+void oscillator_init(int _frequency);
 
 // Interrupt
 void interrupt_init();

@@ -3,8 +3,6 @@
 #include <xc.h>
 #include <pic18f4520.h>
 
-
-int resistor_value = 0;
 // Variable Resistor
 void resistor_init(){
     TRISAbits.TRISA0 = 1;
@@ -25,4 +23,34 @@ void resistor_init(){
     IPR1bits.ADIP = 1;     
     
     ADCON0bits.GO = 1;
+    
+    ADCON2bits.ADCS = 0b001;
+    ADCON2bits.ACQT = 0b001;
+    
+    ADCON0bits.ADON = 1;
+    ADCON2bits.ADFM = 0;     // 
+    
+    PIE1bits.ADIE = 0;
+    
+    ADCON0bits.GO = 1;
+}
+
+int get_resistor_value(){
+    
+    ADCON0bits.CHS = 0b0000; // Analog Channel Select Bit: choose AN0
+    ADCON0bits.GO = 1;
+    
+    while (ADCON0bits.GO_nDONE);
+    
+    // Left Justified (ADFM = 0)
+    // "The left justified format provides an 8-bit result in the ADRESH register"
+    return ADRESH;
+    
+    // Right Justified (ADFM = 1)
+    // "The right justified format provides the 10-bit converted result in ADRESH:ADRESL 
+    //  with the upper two bits in bits 1, 0 of the ADRESH and lower eight bits in ADRESL"
+    /*
+    int val = ((ADRESH & 0b11) << 8) | ADRESL;
+       return val;
+       */
 }

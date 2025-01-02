@@ -15,7 +15,7 @@ int TMR2_postscaler = 1;
 int TMR2_repeat = 0;
 
 // Oscillator
-int Frequency = 0;
+int frequency = 0;
 
 /* Timer */
 void TMR1_init(int prescaler, int init_val){
@@ -94,11 +94,11 @@ void CCP1_init(){
 
 
 /* Oscillator */
-void oscillator_init(int frequency){
-    Frequency = frequency;
-    IRCF2 = (unsigned char)(frequency / 4) % 2;
-    IRCF1 = (unsigned char)(frequency / 2) % 2;
-    IRCF0 = (unsigned char)(frequency) % 2;
+void oscillator_init(int _frequency){
+    frequency = _frequency;
+    IRCF2 = (unsigned char)(_frequency / 4) % 2;
+    IRCF1 = (unsigned char)(_frequency / 2) % 2;
+    IRCF0 = (unsigned char)(_frequency) % 2;
 }
 
 /* Interrupt */

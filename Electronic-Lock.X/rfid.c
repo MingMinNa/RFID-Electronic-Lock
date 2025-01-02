@@ -25,6 +25,7 @@ int end_idx = 1;
 void rfid_init(){    
     start_idx = 0;
     end_idx = 1;
+    
     for(int i = 0; i < MAX_STORAGE; ++i){
         database[i][0] = '\0';
     }
