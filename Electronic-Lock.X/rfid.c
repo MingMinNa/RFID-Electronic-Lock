@@ -3,6 +3,7 @@
 #include "headers/rfid.h"
 #include "headers/uart.h"
 #include "string.h"
+#include "stdio.h"
 #include <xc.h>
 #include <pic18f4520.h>
 
@@ -56,19 +57,34 @@ unsigned char rfid_read(){
     if(reach_end){
         // add error detection by checking the checksum
         
-        unsigned char checksum = 0;
+        unsigned char valid_char = 1;
+        int upper = char_to_hex(input_ID[10]);
+        int lower = char_to_hex(input_ID[11]);
+        unsigned char check_byte = 0;
+        if(upper == -1 || lower == -1)
+             valid_char = 0;
+        else check_byte = upper * 16 + lower;
         
+        unsigned char checksum = 0;
         for(int i = 0; i < 10; i += 2){
-            unsigned char byte = (input_ID[i * 2] - '0') * 16 + (input_ID[i * 2 + 1] - '0');
-            checksum ^= byte;
+            if(!valid_char) continue;
+            unsigned char byte = 0;
+            upper = char_to_hex(input_ID[i]);
+            lower = char_to_hex(input_ID[i + 1]);
+            if(upper == -1 || lower == -1)
+                 valid_char = 0;
+            else checksum ^= (upper * 16 + lower);
         }
-        unsigned char check_byte = (input_ID[10] - '0') * 16 + (input_ID[11] - '0');
-//        if(checksum != check_byte){
-//            strcpy(display_info, "The checksum is invalid! Please scan again");
-//            info_len = (int)strlen(display_info);
-//            screen_display();
-//            return 2;
-//        }
+        
+        if(checksum != check_byte || checksum == 0 || valid_char == 0){
+            strcpy(display_info, "The checksum is invalid! Please scan again");
+            info_len = (int)strlen(display_info);
+            screen_display();
+            for(int i = 0; i < MAX_ID_LEN; ++i)
+                input_ID[i] = '\0';
+            input_len = 0;
+            return 2;
+        }
             
         if(input_len >= MAX_ID_LEN)
             input_ID[MAX_ID_LEN - 1] = '\0';
@@ -176,5 +192,16 @@ int find_ID(){
         if(strcmp(database[i], input_ID) == 0)
             return i;
     }
+    return -1;
+}
+
+int char_to_hex(unsigned char ch){
+    
+    if('a' <= ch && ch <= 'f')
+        return ch - 'a' + 10;
+    else if('A' <= ch && ch <= 'F')
+        return ch - 'A' + 10;
+    else if('0' <= ch && ch <= '9')
+        return ch - '0';
     return -1;
 }
