@@ -60,20 +60,24 @@
 <details>
   <summary>PIC18F4520</summary>
 
-  <img src="./Images/Conponents/PIC18F4520.jpg" alt="PIC18F4520" width="350" height="233">
-  <img src="./Images/Conponents/PIC18F4520 Pinout Diagram.png" alt="Pinout Diagram" width="350">
+  <img src="./Images/Components/PIC18F4520.jpg" alt="PIC18F4520" width="350" height="233">
+  <img src="./Images/Components/PIC18F4520 Pinout Diagram.png" alt="Pinout Diagram" width="350">
+
+  * 由於 **MG90 Motor** 跟 **Buzzer** 均需要使用 **PWM** 模式，故需要使用兩個 **PIC18F450** 晶片
+    > 大部分元件都是接在第一個晶片（下面以 **Device1** 稱呼），只有 **TTL** 與 **Motor** 接在第二個晶片（以 **Device2** 稱呼）。  
+    > 兩個晶片透過 **UART** 傳遞訊息，將 **Device1** 的 ``RC6/TX`` 連接至 **Device2** 的 ``RC7/RX``，即 **Device1** 傳訊息給 **Device2**。
 
 </details>
 
 <details>
   <summary>RDM6300</summary>
 
-  <img src="./Images/Conponents/RFID%20RDM6300%20Pinout%20Diagram.png" alt="RDM6300 PINOUT" width="280">
-  <img src="./Images/Conponents/RDM6300%20Copper%20Coil.jpg" alt="RDM6300 Coil" width="200">
-  <img src="./Images/Conponents/125kHz RFID Card.jpg" alt="125kHz RFID Card" width="320" height="200">
+  <img src="./Images/Components/RFID%20RDM6300%20Pinout%20Diagram.png" alt="RDM6300 PINOUT" width="280">
+  <img src="./Images/Components/RDM6300%20Copper%20Coil.jpg" alt="RDM6300 Coil" width="200">
+  <img src="./Images/Components/125kHz RFID Card.jpg" alt="125kHz RFID Card" width="320" height="200">
 
 
-  |   RDM6300 Pin   |      Coil      |     PIC18F4520     |
+  |   RDM6300 Pin   |      Coil      |   PIC18F4520(1)    |
   |-----------------|----------------|--------------------|
   | `ANT1`          |  `Black Line`  |         X          |
   | `ANT2`          |   `Red Line`   |         X          |
@@ -85,9 +89,9 @@
 <details>
   <summary>Button</summary>
 
-  <img src="./Images/Conponents/Button.jpg" alt="Button" width="200">
+  <img src="./Images/Components/Button.jpg" alt="Button" width="200">
 
-  |      Button      |                                                                          PIC18F4520                                                                          |
+  |      Button      |                                                                         PIC18F4520(1)                                                                        |
   |------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
   |   ``One side``   | ``RB0/INT0`` → ``Resistor`` → ``Vdd``<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ ``One side``|
   | ``Another side`` |                                                                           ``Vss``                                                                            |
@@ -96,52 +100,67 @@
 <details>
   <summary>LED</summary>
 
-  <img src="./Images/Conponents/LED.jpg" alt="LED" width="200">
+  <img src="./Images/Components/LED.jpg" alt="LED" width="200">
 
-  |      LED1      |                PIC18F4520               |
+  |      LED1      |               PIC18F4520(1)             |
   |----------------|-----------------------------------------|
   |  ``Long Leg``  |``RA1/AN1`` → ``Resistor`` → ``Long Leg``|
   |  ``Short Leg`` |                 ``Vss``                 |
 
-  |      LED2      |                PIC18F4520               |
+  |      LED2      |               PIC18F4520(1)             |
   |----------------|-----------------------------------------|
   |  ``Long Leg``  |``RA2/AN2`` → ``Resistor`` → ``Long Leg``|
   |  ``Short Leg`` |                 ``Vss``                 |
-
+  
 </details>
 <details>
   <summary>Buzzer</summary>
   
-  <img src="./Images/Conponents/Buzzer.jpg" alt="Buzzer" width="200">
+  <img src="./Images/Components/Buzzer.jpg" alt="Buzzer" width="200">
 
-  |  Buzzer |  PIC18F4520  |
-  |---------|--------------|
-  | ``Vcc`` |   ``Vdd``    |
-  | ``GND`` |   ``Vss``    |
-  | ``I/O`` | ``RC2/CCP1`` |
-
+  |  Buzzer |  PIC18F4520(1)  |
+  |---------|-----------------|
+  | ``Vcc`` |     ``Vdd``     |
+  | ``GND`` |     ``Vss``     |
+  | ``I/O`` |   ``RC2/CCP1``  |
+  
 </details>
 <details>
   <summary>Variable Resistor</summary>
 
-  <img src="./Images/Conponents/Variable Resistor.jpg" alt="Variable Resistor" width="200" height="200">
+  <img src="./Images/Components/Variable Resistor.jpg" alt="Variable Resistor" width="200" height="200">
 
-  | Variable Resistor | PIC18F4520 |
-  |-------------------|------------|
-  |   ``One side``    |  ``Vdd``   |
-  |    ``Center``     | ``RA0/AN0``|
-  | ``Another side``  |  ``Vss``   |
+  | Variable Resistor | PIC18F4520(1) |
+  |-------------------|---------------|
+  |   ``One side``    |    ``Vdd``    |
+  |    ``Center``     |  ``RA0/AN0``  |
+  | ``Another side``  |    ``Vss``    |
+  
 </details>
 
 <details>
   <summary>USB to TTL Serial Cable</summary>
 
-  <img src="./Images/Conponents/USB to TTL Cable.jpg" alt="TTL Cable" width="200" height="200">
+  <img src="./Images/Components/USB to TTL Cable.jpg" alt="TTL Cable" width="200" height="200">
 
-  |  TTL Cable | PIC18F4520 |
-  |------------|------------|
-  |  ``Red``   |  ``Vdd``   |
-  |  ``Black`` |  ``Vss``   |
-  |  ``Green`` |     X      |
-  |  ``White`` | ``RC6/TX`` |
+  |  TTL Cable |PIC18F4520(2)|
+  |------------|-------------|
+  |  ``Red``   |   ``Vdd``   |
+  |  ``Black`` |   ``Vss``   |
+  |  ``Green`` |      X      |
+  |  ``White`` |  ``RC6/TX`` |
+
+</details>
+
+<details>
+  <summary>MG90 Servo Motor</summary>
+
+  <img src="./Images/Components/MG90 Servo Motor.jpg" alt="TTL Cable" width="200" height="200">
+
+  |     MG90    |   PIC18F4520(2) |
+  |-------------|-----------------|
+  |   ``Red``   |     ``Vdd``     |
+  |  ``Orange`` |   ``RC2/CCP1``  |
+  |  ``Brown``  |     ``Vss``     |
+
 </details>

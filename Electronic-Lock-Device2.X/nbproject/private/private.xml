@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/main.c</file>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/servo_motor.c</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/internal_setting.c</file>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/uart.c</file>
         </group>
     </open-files>
