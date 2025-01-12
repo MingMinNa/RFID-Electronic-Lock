@@ -8,14 +8,14 @@ int info_len = 0;
 
 void uart_init(void) {
     
-    TRISCbits.TRISC6 = 1;            
-    TRISCbits.TRISC7 = 1;            
+    TRISCbits.TRISC6 = 1;
+    TRISCbits.TRISC7 = 1;
 
     //  Setting baud rate
-    // The below code for Oscillator: _8MHz, Baud Rate: 9600
+    // The below code for Oscillator: _125kHz, Baud Rate: 9600
     TXSTAbits.SYNC = 0;
-    BAUDCONbits.BRG16 = 0;
-    TXSTAbits.BRGH = 0;
+    BAUDCONbits.BRG16 = 1;
+    TXSTAbits.BRGH = 1;
     SPBRG = 12; 
 
     // Serial enable
@@ -31,8 +31,8 @@ void uart_init(void) {
     // IPR1bits.TXIP = 1; // priority  
 
     // Receiver
-    PIE1bits.RCIE = 1;    // interrupte enable
-    IPR1bits.RCIP = 1;    // priority
+    PIE1bits.RCIE = 1; // interrupte enable
+    IPR1bits.RCIP = 1; // priority
     
     for(int i = 0; i < MAX_INFO_LEN; ++i)
         display_info[i] = '\0';
@@ -57,7 +57,5 @@ void screen_display(){
     for(int i = 0; i < info_len; ++i){
         uart_write(display_info[i]);
     }
-    uart_write('\r');
-    uart_write('\n');
     clear_buffer();
 }

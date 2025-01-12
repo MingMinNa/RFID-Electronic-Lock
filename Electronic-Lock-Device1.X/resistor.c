@@ -49,8 +49,7 @@ int get_resistor_value(){
     // Right Justified (ADFM = 1)
     // "The right justified format provides the 10-bit converted result in ADRESH:ADRESL 
     //  with the upper two bits in bits 1, 0 of the ADRESH and lower eight bits in ADRESL"
-    /*
-    int val = ((ADRESH & 0b11) << 8) | ADRESL;
-       return val;
-       */
+    
+    // int val = ((ADRESH & 0b11) << 8) | ADRESL;
+    // return val;
 }
