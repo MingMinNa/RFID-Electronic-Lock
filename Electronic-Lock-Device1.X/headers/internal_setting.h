@@ -1,6 +1,6 @@
 
-#ifndef INTERRUPT_H
-#define	INTERRUPT_H
+#ifndef INTERNAL_SETTING_H
+#define	INTERNAL_SETTING_H
 
 # define _8MHz 0b111
 # define _4MHz 0b110
@@ -27,5 +27,5 @@ void oscillator_init(int _frequency);
 void interrupt_init();
 void INT0_open();
 
-#endif	/* INTERRUPT_H */
+#endif	/* INTERNAL_SETTING_H */
 

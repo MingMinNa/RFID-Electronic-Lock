@@ -16,7 +16,7 @@ extern int info_len;
 extern int mode;
 extern unsigned char digit;
 
-// Only store 8 ID and the max numerber of characters in each ID is 14
+// Only store 5 ID and the max numerber of characters in each ID is 14
 char database[MAX_STORAGE][MAX_ID_LEN];
 char input_ID[MAX_ID_LEN];
 int input_len = 0;
@@ -55,8 +55,7 @@ unsigned char rfid_read(){
     }
     
     if(reach_end){
-        // add error detection by checking the checksum
-        
+        // error detection by checking the checksum
         unsigned char valid_char = 1;
         int upper = char_to_hex(input_ID[10]);
         int lower = char_to_hex(input_ID[11]);

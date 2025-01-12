@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Electronic-Lock</name>
+            <name>Electronic-Lock-Device1</name>
             <creation-uuid>ea3026af-6921-45c2-9b2e-78a64167ef23</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>

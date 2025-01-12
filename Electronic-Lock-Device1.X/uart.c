@@ -31,8 +31,8 @@ void uart_init(void) {
     // IPR1bits.TXIP = 1; // priority  
 
     // Receiver
-    PIE1bits.RCIE = 1; // interrupte enable
-    IPR1bits.RCIP = 1; // priority
+    PIE1bits.RCIE = 1;    // interrupte enable
+    IPR1bits.RCIP = 1;    // priority
     
     display_info[0] = '\0';
     info_len = 0;

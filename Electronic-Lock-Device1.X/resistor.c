@@ -7,9 +7,9 @@
 void resistor_init(){
     TRISAbits.TRISA0 = 1;
     
-    ADCON1bits.VCFG0 = 0;   // use Vdd as reference voltage(V-)
-    ADCON1bits.VCFG1 = 0;   // use Vss as reference voltage(V+)
-    ADCON1bits.PCFG = 0x0E; // AN0(analog), others(digital)
+    ADCON1bits.VCFG0 = 0;    // use Vdd as reference voltage(V-)
+    ADCON1bits.VCFG1 = 0;    // use Vss as reference voltage(V+)
+    ADCON1bits.PCFG = 0x0E;  // AN0(analog), others(digital)
     ADCON0bits.CHS = 0b0000; // choose AN0
     
     ADCON2bits.ADCS = 0b101; // TAD = Fosc/16
@@ -28,7 +28,7 @@ void resistor_init(){
     ADCON2bits.ACQT = 0b001;
     
     ADCON0bits.ADON = 1;
-    ADCON2bits.ADFM = 0;     // 
+    ADCON2bits.ADFM = 0;
     
     PIE1bits.ADIE = 0;
     
