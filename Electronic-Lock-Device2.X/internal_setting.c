@@ -1,6 +1,5 @@
 
 #include "headers/internal_setting.h"
-#include "headers/uart.h"
 #include <xc.h>
 #include <pic18f4520.h>
 
@@ -113,9 +112,9 @@ void interrupt_init(){
 void INT0_open(){
     // INT0 is high priority interrupt
     
-    ADCON1 = 0x0E;
-    TRISBbits.TRISB1 = 1;
-    LATBbits.LATB1 = 0;
+    ADCON1 = 0x0F;
+    TRISBbits.TRISB0 = 1;
+    LATBbits.LATB0 = 1;
     
     INTCONbits.INT0IF = 0;
     INTCONbits.INT0IE = 1;

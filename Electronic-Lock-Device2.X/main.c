@@ -1,7 +1,5 @@
 
-#include "headers/info.h"
 #include "headers/internal_setting.h"
-#include "headers/uart.h"
 #include "headers/servo_motor.h"
 #include "string.h"
 #include <xc.h>
@@ -68,26 +66,30 @@ extern int TMR1_cnt;
 void main(void) {
     oscillator_init(_500kHz);
     interrupt_init();
-    INT0_open();
     TMR1_init(8, 57724);
     T1CONbits.TMR1ON = 0;
-    
     motor_init();
-    while(1);
+    
+    ADCON1 = 0x0F;
+    TRISBbits.TRISB0 = 1;
+    LATBbits.LATB0 = 1;
+    
+    TRISBbits.TRISB1 = 0;
+    LATBbits.LATB1 = 1;
+    
+    while(1){
+        __delay_ms(500);
+        if(PORTBbits.RB0 == 0){
+            set_degree(0);
+            TMR1_cnt = 6;
+            TMR1_restart();
+        }
+    }
     return;
 }
 
 /* Interrupt Handlers */
 void __interrupt(high_priority) H_ISR(){
-    /* INT0 Interrupt */
-    if(INTCONbits.INT0IF){
-        
-        set_degree(0);
-        TMR1_cnt = 6;
-        TMR1_restart();
-        __delay_ms(100);
-        INTCONbits.INT0IF = 0;
-    }
     
     /* TMR1 Interrupt */
     if (PIR1bits.TMR1IF) {

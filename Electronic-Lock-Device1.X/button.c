@@ -5,7 +5,7 @@
 
 void button_init(int use_Interrupt){
     ADCON1 = 0x0E;
-    TRISBbits.TRISB1 = 1;
-    LATBbits.LATB1 = 0;
+    TRISBbits.TRISB0 = 1;
+    LATBbits.LATB0 = 0;
     INT0_open();
 }

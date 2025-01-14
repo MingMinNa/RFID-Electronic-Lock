@@ -1,8 +1,6 @@
 
 #include "headers/servo_motor.h"
 #include "headers/internal_setting.h"
-#include "headers/info.h"
-#include "headers/uart.h"
 #include <xc.h>
 #include <pic18f4520.h>
 
