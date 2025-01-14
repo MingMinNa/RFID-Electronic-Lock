@@ -85,6 +85,7 @@ void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
     TMR2_postscaler = postscaler;
     
     PR2 = _PR2;
+    T2CONbits.TMR2ON = 1;
 }
 
 
@@ -107,4 +108,16 @@ void interrupt_init(){
     RCONbits.IPEN = 1;      //enable Interrupt Priority mode
     INTCONbits.GIEH = 1;    //enable high priority interrupt
     INTCONbits.GIEL = 1;    //enable low priority interrupt
+}
+
+void INT0_open(){
+    // INT0 is high priority interrupt
+    
+    ADCON1 = 0x0E;
+    TRISBbits.TRISB1 = 1;
+    LATBbits.LATB1 = 0;
+    
+    INTCONbits.INT0IF = 0;
+    INTCONbits.INT0IE = 1;
+    INTCON2bits.INTEDG0 = 1;
 }

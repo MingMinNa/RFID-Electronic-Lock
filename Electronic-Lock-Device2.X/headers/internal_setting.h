@@ -25,6 +25,7 @@ void oscillator_init(int _frequency);
 
 // Interrupt
 void interrupt_init();
+void INT0_open();
 
 #endif	/* INTERNAL_SETTING_H */
 

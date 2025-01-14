@@ -66,43 +66,39 @@
 extern int TMR1_cnt;
 
 void main(void) {
-    interrupt_init();
     oscillator_init(_500kHz);
+    interrupt_init();
+    INT0_open();
     TMR1_init(8, 57724);
     T1CONbits.TMR1ON = 0;
     
     motor_init();
-    uart_init();
     while(1);
     return;
 }
 
 /* Interrupt Handlers */
 void __interrupt(high_priority) H_ISR(){
-    /* UART Read Interrupt */
-    if(RCIF){
-        if(RCSTAbits.OERR){
-            CREN = 0;   // Error happend
-            Nop();
-            CREN = 1;   // Error completed
-        }
-        unsigned char ret = info_read();
-        if(ret == 1){
-            set_degree(90);
-            TMR1_cnt = 6;
-            TMR1_restart();
-        }
+    /* INT0 Interrupt */
+    if(INTCONbits.INT0IF){
+        
+        set_degree(0);
+        TMR1_cnt = 6;
+        TMR1_restart();
+        __delay_ms(100);
+        INTCONbits.INT0IF = 0;
     }
+    
     /* TMR1 Interrupt */
     if (PIR1bits.TMR1IF) {
         // Do something
-        
-        if(TMR1_cnt == 0){
+        if(TMR1_cnt <= 0){
             set_degree(-90);
             T1CONbits.TMR1ON = 0;
         }
         else{
             TMR1_cnt --;
+            TMR1_restart();
         }
         
         __delay_us(100);

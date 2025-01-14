@@ -31,6 +31,11 @@ void rfid_init(){
     }
     for(int i = 0; i < MAX_ID_LEN; ++i)
         input_ID[i] = '\0';
+    input_len = 0;
+    
+    // lock signal
+    TRISBbits.TRISB1 = 0;
+    LATBbits.LATB1 = 1;
 }
 
 unsigned char database_empty(){
@@ -45,8 +50,12 @@ unsigned char rfid_read(){
     int reach_end = 0;
     
     unsigned char read_char = uart_read();
-    if(read_char == 0x02)
+    if(read_char == 0x02){
+        for(int i = 0; i < MAX_ID_LEN; ++i)
+            input_ID[i] = '\0';
+        input_len = 0;
         return 0;
+    }
     else if(read_char == 0x03){
         reach_end = 1;
     }
@@ -98,6 +107,7 @@ unsigned char rfid_read(){
         }
         else if(digit == 0b10){ // Check Mode(Ready)
             ret = check_ID();
+            if(ret == 1)    unlock_signal();
         }
         for(int i = 0; i < MAX_ID_LEN; ++i)
             input_ID[i] = '\0';
@@ -203,4 +213,12 @@ int char_to_hex(unsigned char ch){
     else if('0' <= ch && ch <= '9')
         return ch - '0';
     return -1;
+}
+
+void unlock_signal(){
+    
+    LATBbits.LATB1 = 0;
+    __delay_ms(20);
+    LATBbits.LATB1 = 1;
+    return;
 }

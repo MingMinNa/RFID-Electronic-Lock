@@ -90,7 +90,7 @@ void main(void) {
     
     buzzer_init();
     led_init();
-    button_init(1);
+    button_init();
     resistor_init();
     uart_init();
     rfid_init();
