@@ -11,7 +11,6 @@ unsigned char insert_ID();
 unsigned char remove_ID();
 unsigned char check_ID();
 int find_ID();
-void unlock_signal();
 int char_to_hex(unsigned char ch);
 #endif	/* RFID_H */
 

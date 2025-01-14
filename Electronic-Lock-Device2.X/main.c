@@ -62,6 +62,8 @@
 
 
 extern int TMR1_cnt;
+extern char display_info[MAX_INFO_LEN];
+extern int info_len = 0;
 
 void main(void) {
     oscillator_init(_500kHz);
@@ -69,28 +71,35 @@ void main(void) {
     TMR1_init(8, 57724);
     T1CONbits.TMR1ON = 0;
     motor_init();
-    
-    ADCON1 = 0x0F;
-    TRISBbits.TRISB0 = 1;
-    LATBbits.LATB0 = 1;
-    
-    TRISBbits.TRISB1 = 0;
-    LATBbits.LATB1 = 1;
-    
-    while(1){
-        __delay_ms(500);
-        if(PORTBbits.RB0 == 0){
-            set_degree(0);
-            TMR1_cnt = 6;
-            TMR1_restart();
-        }
-    }
+    uart_init();
+    while(1);
     return;
 }
 
 /* Interrupt Handlers */
 void __interrupt(high_priority) H_ISR(){
     
+    /* UART Read Interrupt */
+    if(RCIF){
+        if(RCSTAbits.OERR){
+            CREN = 0;   // Error happend
+            Nop();
+            CREN = 1;   // Error completed
+        }
+        unsigned char ret = uart_read();
+        if(ret != '\n'){
+            display_info[info_len ++] = ret;
+        }
+        else if(ret == '\n'){
+            display_info[info_len] = '\0';
+            if(strcmp(display_info, "unlock") == 0){
+                TMR1_cnt = 6;
+                TMR1_restart();
+                set_degree(0);
+            }
+        }
+    }
+
     /* TMR1 Interrupt */
     if (PIR1bits.TMR1IF) {
         // Do something

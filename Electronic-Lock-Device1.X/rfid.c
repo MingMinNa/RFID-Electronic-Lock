@@ -32,10 +32,6 @@ void rfid_init(){
     for(int i = 0; i < MAX_ID_LEN; ++i)
         input_ID[i] = '\0';
     input_len = 0;
-    
-    // lock signal
-    TRISBbits.TRISB1 = 0;
-    LATBbits.LATB1 = 0;
 }
 
 unsigned char database_empty(){
@@ -107,7 +103,6 @@ unsigned char rfid_read(){
         }
         else if(digit == 0b10){ // Check Mode(Ready)
             ret = check_ID();
-            if(ret == 1)    unlock_signal();
         }
         for(int i = 0; i < MAX_ID_LEN; ++i)
             input_ID[i] = '\0';
@@ -202,14 +197,6 @@ int find_ID(){
             return i;
     }
     return -1;
-}
-
-void unlock_signal(){
-    
-    LATBbits.LATB1 = 1;
-    __delay_ms(20);
-    LATBbits.LATB1 = 0;
-    return;
 }
 
 int char_to_hex(unsigned char ch){
