@@ -87,17 +87,10 @@ void __interrupt(high_priority) H_ISR(){
             CREN = 1;   // Error completed
         }
         unsigned char ret = uart_read();
-        if(ret != '\n'){
-            display_info[info_len ++] = ret;
-        }
-        else if(ret == '\n'){
-            display_info[info_len] = '\0';
-            if(strcmp(display_info, "unlock") == 0){
-                TMR1_cnt = 6;
-                TMR1_restart();
-                set_degree(0);
-            }
-            screen_display();
+        if(ret != '\0'){
+            TMR1_cnt = 6;
+            TMR1_restart();
+            set_degree(0);
         }
     }
 

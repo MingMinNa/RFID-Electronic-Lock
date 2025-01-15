@@ -9,11 +9,11 @@ while True:
     if pic.in_waiting > 0:
         data = pic.read().decode('ascii')
         print(f"{data}", end = "", flush = True)
-
+        
         if data != '\n':    command += data
         else:
             if command[:5] == 'Hello':
-                pic.write('unlock\n'.encode('ascii'))
+                pic.write('unlock'.encode('ascii') + b'\n')
                 pic.flush()
             command = ""
             
