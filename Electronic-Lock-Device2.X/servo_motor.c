@@ -4,8 +4,8 @@
 #include <xc.h>
 #include <pic18f4520.h>
 
-extern int TMR2_prescaler;      // In Timer.c
-extern int frequency;           // In Oscillator.c
+extern int TMR2_prescaler;
+extern int frequency;
 
 int current_degree = 0;
 
