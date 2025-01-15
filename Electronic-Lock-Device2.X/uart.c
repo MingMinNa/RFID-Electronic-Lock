@@ -11,8 +11,8 @@ void uart_init(void) {
     TRISCbits.TRISC6 = 1;            
     TRISCbits.TRISC7 = 1;            
 
-    //  Setting baud rate
-    // The below code for Oscillator: _8MHz, Baud Rate: 9600
+    // Setting baud rate
+    // The below code for Oscillator: _500kHz, Baud Rate: 9600
     TXSTAbits.SYNC = 0;
     BAUDCONbits.BRG16 = 1;
     TXSTAbits.BRGH = 1;
