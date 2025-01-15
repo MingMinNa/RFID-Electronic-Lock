@@ -61,7 +61,7 @@
   <img src="./Images/Components/PIC18F4520.jpg" alt="PIC18F4520" width="350" height="233">
   <img src="./Images/Components/PIC18F4520 Pinout Diagram.png" alt="Pinout Diagram" width="350">
 
-  * 由於 **MG90 Motor** 跟 **Buzzer** 均需要使用 **PWM** 模式，故需要使用兩個 **PIC18F450** 晶片
+  * 由於 **SG90 Motor** 跟 **Buzzer** 均需要使用 **PWM** 模式，故需要使用兩個 **PIC18F450** 晶片
     > 大部分元件都是接在第一個晶片（下面以 **Device1** 稱呼），只有 **TTL** 與 **Motor** 接在第二個晶片（以 **Device2** 稱呼）。  
     > 兩個晶片透過 **UART** 傳遞資訊，**Device1** 會先將資訊傳遞給電腦，再由電腦傳遞訊號給 **Device2**。
 
@@ -151,11 +151,11 @@
 </details>
 
 <details>
-  <summary>MG90 Servo Motor</summary>
+  <summary>SG90 Servo Motor</summary>
 
-  <img src="./Images/Components/MG90 Servo Motor.jpg" alt="TTL Cable" width="200" height="200">
+  <img src="./Images/Components/SG90 Servo Motor.jpg" alt="TTL Cable" width="200" height="200">
 
-  |     MG90    |   PIC18F4520(2) |
+  |     SG90    |   PIC18F4520(2) |
   |-------------|-----------------|
   |  ``Orange`` |   ``RC2/CCP1``  |
   |   ``Red``   |     ``Vdd``     |
