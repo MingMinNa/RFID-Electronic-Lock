@@ -46,8 +46,6 @@ void TMR1_init(int prescaler, int init_val){
     
     TMR1_prescaler = prescaler;
     TMR1_init_val = init_val;
-    
-    T1CONbits.TMR1ON = 1;
 }
 
 void TMR1_restart(){

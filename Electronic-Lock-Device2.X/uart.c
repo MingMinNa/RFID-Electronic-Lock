@@ -14,8 +14,8 @@ void uart_init(void) {
     //  Setting baud rate
     // The below code for Oscillator: _8MHz, Baud Rate: 9600
     TXSTAbits.SYNC = 0;
-    BAUDCONbits.BRG16 = 0;
-    TXSTAbits.BRGH = 0;
+    BAUDCONbits.BRG16 = 1;
+    TXSTAbits.BRGH = 1;
     SPBRG = 12; 
 
     // Serial enable
@@ -43,7 +43,21 @@ unsigned char uart_read(){
     return RCREG;
 }
 
+void uart_write(unsigned char data){
+    while(!TXSTAbits.TRMT);
+    TXREG = data;
+}
+
 void clear_buffer(){
     display_info[0] = '\0';
     info_len = 0;
+}
+
+void screen_display(){
+    for(int i = 0; i < info_len; ++i){
+        uart_write(display_info[i]);
+    }
+    uart_write('\r');
+    uart_write('\n');
+    clear_buffer();
 }

@@ -1,6 +1,7 @@
 
 #include "headers/internal_setting.h"
 #include "headers/servo_motor.h"
+#include "headers/uart.h"
 #include "string.h"
 #include <xc.h>
 #include <pic18f4520.h>
@@ -69,7 +70,6 @@ void main(void) {
     oscillator_init(_500kHz);
     interrupt_init();
     TMR1_init(8, 57724);
-    T1CONbits.TMR1ON = 0;
     motor_init();
     uart_init();
     while(1);
@@ -97,6 +97,7 @@ void __interrupt(high_priority) H_ISR(){
                 TMR1_restart();
                 set_degree(0);
             }
+            screen_display();
         }
     }
 

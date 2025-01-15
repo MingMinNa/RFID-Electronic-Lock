@@ -5,7 +5,11 @@
         <group>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/main.c</file>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/servo_motor.c</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/headers/uart.h</file>
             <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/internal_setting.c</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/headers/servo_motor.h</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/uart.c</file>
+            <file>file:/C:/Users/User/Desktop/GitHub/RFID-Electronic-Lock/Electronic-Lock-Device2.X/headers/internal_setting.h</file>
         </group>
     </open-files>
 </project-private>

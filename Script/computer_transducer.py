@@ -1,6 +1,6 @@
 import serial
 
-pic = serial.Serial('COM3', 9600, timeout=1)
+pic = serial.Serial('COM3', 9600, timeout = 1, write_timeout = 0)
 
 
 command = ""
@@ -13,7 +13,7 @@ while True:
         if data != '\n':    command += data
         else:
             if command[:5] == 'Hello':
-                for ele in "unlock\n".encode('ascii'):
-                    pic.write(ele)
+                pic.write('unlock\n'.encode('ascii'))
+                pic.flush()
             command = ""
             
