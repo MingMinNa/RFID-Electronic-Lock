@@ -117,7 +117,7 @@ unsigned char rfid_read(){
 unsigned char insert_ID(){
     
     if(database_full()){
-        strcpy(display_info, "The dataset is full");
+        strcpy(display_info, "The database is full");
         info_len = (int)strlen(display_info);
         screen_display();
         return 2;
@@ -144,7 +144,7 @@ unsigned char insert_ID(){
 
 unsigned char remove_ID(){
     if(database_empty()){
-        strcpy(display_info, "The dataset is empty");
+        strcpy(display_info, "The database is empty");
         info_len = (int)strlen(display_info);
         screen_display();
         return 2;

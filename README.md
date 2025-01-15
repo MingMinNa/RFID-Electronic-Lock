@@ -50,10 +50,8 @@
 * 未找到 ID 卡號：錯誤操作
 * ID 讀取不正確：錯誤操作
 
-蜂鳴器會在 **正確操作** 和 **錯誤操作** 時，發出不同的聲響，以提醒使用者操作是否錯誤。
-
-## Demo
-  
+蜂鳴器會在 **正確操作** 和 **錯誤操作** 時，發出不同的聲響，以提醒使用者操作是否錯誤。  
+伺服馬達則會在 **檢查模式的正確操作** 時轉動，用以模擬開鎖動作。
 
 ## Components
 
@@ -65,7 +63,7 @@
 
   * 由於 **MG90 Motor** 跟 **Buzzer** 均需要使用 **PWM** 模式，故需要使用兩個 **PIC18F450** 晶片
     > 大部分元件都是接在第一個晶片（下面以 **Device1** 稱呼），只有 **TTL** 與 **Motor** 接在第二個晶片（以 **Device2** 稱呼）。  
-    > 兩個晶片透過 **UART** 傳遞訊息，將 **Device1** 的 ``RC6/TX`` 連接至 **Device2** 的 ``RC7/RX``，即 **Device1** 傳訊息給 **Device2**。
+    > 兩個晶片透過 **UART** 傳遞資訊，**Device1** 會先將資訊傳遞給電腦，再由電腦傳遞訊號給 **Device2**。
 
 </details>
 
@@ -81,8 +79,8 @@
   |-----------------|----------------|--------------------|
   | `ANT1`          |  `Black Line`  |         X          |
   | `ANT2`          |   `Red Line`   |         X          |
-  | `Vcc (down)`    |       X        |       `Vdd`        |
-  | `GND (down)`    |       X        |       `Vss`        |
+  | `Vcc (below)`   |       X        |       `Vdd`        |
+  | `GND (below)`   |       X        |       `Vss`        |
   | `TX`            |       X        |      `RC7/RX`      |
 
 </details>
@@ -143,12 +141,12 @@
 
   <img src="./Images/Components/USB to TTL Cable.jpg" alt="TTL Cable" width="200" height="200">
 
-  |  TTL Cable |PIC18F4520(2)|
-  |------------|-------------|
-  |  ``Red``   |   ``Vdd``   |
-  |  ``Black`` |   ``Vss``   |
-  |  ``Green`` |      X      |
-  |  ``White`` |  ``RC6/TX`` |
+  |  TTL Cable |PIC18F4520(1)|PIC18F4520(2)|
+  |------------|-------------|-------------|
+  |  ``Red``   |   ``Vdd``   |      X      |
+  |  ``Black`` |   ``Vss``   |      X      |
+  |  ``Green`` |      X      |  ``RC7/RX`` |
+  |  ``White`` |  ``RC6/TX`` |      X      |
 
 </details>
 
@@ -159,8 +157,8 @@
 
   |     MG90    |   PIC18F4520(2) |
   |-------------|-----------------|
-  |   ``Red``   |     ``Vdd``     |
   |  ``Orange`` |   ``RC2/CCP1``  |
+  |   ``Red``   |     ``Vdd``     |
   |  ``Brown``  |     ``Vss``     |
 
 </details>

@@ -13,7 +13,7 @@ while True:
         if data != '\n':    command += data
         else:
             if command[:5] == 'Hello':
-                pic.write('unlock'.encode('ascii') + b'\n')
+                pic.write('unlock'.encode('ascii'))
                 pic.flush()
             command = ""
             
