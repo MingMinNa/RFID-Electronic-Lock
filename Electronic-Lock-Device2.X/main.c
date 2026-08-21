@@ -66,7 +66,8 @@ extern int TMR1_cnt;
 extern char display_info[MAX_INFO_LEN];
 extern int info_len = 0;
 
-void main(void) {
+void main(void) 
+{
     oscillator_init(_500kHz);
     interrupt_init();
     TMR1_init(8, 57724);
@@ -77,17 +78,17 @@ void main(void) {
 }
 
 /* Interrupt Handlers */
-void __interrupt(high_priority) H_ISR(){
-    
+void __interrupt(high_priority) H_ISR()
+{    
     /* UART Read Interrupt */
-    if(RCIF){
-        if(RCSTAbits.OERR){
+    if (RCIF) {
+        if (RCSTAbits.OERR) {
             CREN = 0;   // Error happend
             Nop();
             CREN = 1;   // Error completed
         }
         unsigned char ret = uart_read();
-        if(ret != '\0'){
+        if (ret != '\0') {
             TMR1_cnt = 6;
             TMR1_restart();
             set_degree(0);
@@ -97,11 +98,11 @@ void __interrupt(high_priority) H_ISR(){
     /* TMR1 Interrupt */
     if (PIR1bits.TMR1IF) {
         // Do something
-        if(TMR1_cnt <= 0){
+        if (TMR1_cnt <= 0) {
             set_degree(-90);
             T1CONbits.TMR1ON = 0;
         }
-        else{
+        else {
             TMR1_cnt --;
             TMR1_restart();
         }
@@ -122,7 +123,7 @@ void __interrupt(high_priority) H_ISR(){
     return;
 }
 
-void __interrupt(low_priority) L_ISR(){
-    
+void __interrupt(low_priority) L_ISR()
+{    
     return;
 }

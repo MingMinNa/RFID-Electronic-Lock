@@ -9,8 +9,8 @@ extern int frequency;
 
 int current_degree = 0;
 
-void motor_init(){
-
+void motor_init()
+{
     CCP1_init();
     TRISCbits.TRISC2 = 0;
     LATCbits.LATC2 = 0;
@@ -23,9 +23,9 @@ void motor_init(){
     set_degree(-90);
 }
 
-void set_degree(int degree){
-    
-    // Pulse Width: 500 ~ 2400 µs (-90° ~ 90°)
+void set_degree(int degree)
+{    
+    // Pulse Width: 500 ~ 2400 Âµs (-90Â° ~ 90Â°)
     /* 
     * Duty cycle = (CCPR1L:CCP1CON<5:4>) x Tosc x (TMR2 prescaler)
     *            = ((degree + 90) x (2400 - 500) / (90 - (-90))) + 500

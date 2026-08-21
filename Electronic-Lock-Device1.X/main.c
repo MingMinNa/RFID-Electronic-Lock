@@ -84,7 +84,8 @@ extern unsigned char digit;
 extern char display_info[MAX_INFO_LEN];
 extern int info_len;
 
-void main(void) {
+void main(void) 
+{
     interrupt_init();
     oscillator_init(_8MHz);
     
@@ -95,14 +96,14 @@ void main(void) {
     uart_init();
     rfid_init();
     
-    while(1){
+    while (1) {
         /* Variable Resistor */
         int resistor_value = get_resistor_value();
-        if(resistor_value <= 128){
+        if (resistor_value <= 128) {
             led_output_digit(digit | (0b01));
             mode = 1;
         }
-        else{
+        else {
             led_output_digit(0b10);
             mode = 2;
         }
@@ -111,11 +112,11 @@ void main(void) {
 }
 
 /* Interrupt Handlers */
-void __interrupt(high_priority) H_ISR(){
+void __interrupt(high_priority) H_ISR()
+{
     /* INT0 Interrupt */
-    if(INTCONbits.INT0IF){
-        
-        if(mode == 1){
+    if (INTCONbits.INT0IF) {
+        if (mode == 1) {
             led_output_digit(digit ^ (0b10));
         }
         __delay_ms(100);
@@ -123,17 +124,17 @@ void __interrupt(high_priority) H_ISR(){
     }
     
     /* UART Read Interrupt */
-    if(RCIF){
-        if(RCSTAbits.OERR){
-            CREN = 0;   // Error happend
+    if (RCIF) {
+        if (RCSTAbits.OERR) {
+            CREN = 0;  // Error happend
             Nop();
-            CREN = 1;   // Error completed
+            CREN = 1;  // Error completed
         }
         unsigned char ret = rfid_read();
-        if(ret == 1){       // Operation Successful
+        if (ret == 1) {      // Operation Successful
             buzzer_accept();
         }
-        else if(ret == 2){  // Operation Fail
+        else if (ret == 2) { // Operation Fail
             buzzer_reject();
         }
     }
@@ -159,7 +160,7 @@ void __interrupt(high_priority) H_ISR(){
     return;
 }
 
-void __interrupt(low_priority) L_ISR(){
-    
+void __interrupt(low_priority) L_ISR()
+{    
     return;
 }

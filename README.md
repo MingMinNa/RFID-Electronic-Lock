@@ -1,164 +1,167 @@
-# RFID-Electronic-Lock
+# RFID Electronic Lock
 
-## Introduction
+[![Static Badge](https://img.shields.io/badge/MPLAB%20X-v5.20-blue)](https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide) [![Static Badge](https://img.shields.io/badge/MPLAB%20XC8%20Compiler-v2.5-blue)](https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers/xc8) ![Static Badge](https://img.shields.io/badge/PICkit-4-blue)
 
-一個使用 **RDM6300** 的電子鎖系統  
-目前為止，此系統有三個狀態，分別如下：
-1. ``註冊``狀態
-2. ``註銷``狀態
-3. ``檢查``狀態
+An electronic lock system based on the **RDM6300** RFID reader and **PIC18F4520** microcontrollers.
 
-狀態之間，使用**可變電阻**和**按鈕**進行轉換。  
-例如：使用**按鈕**在 ``註冊`` 跟 ``註銷`` 模式切換、使用**可變電阻**在 ``註冊`` 跟 ``檢查`` 模式切換。
+## Overview
 
-使用 **LED** 燈泡表示目前狀態。
+This project implements a simple RFID-based electronic lock.
+- The RDM6300 reads the RFID card ID and processes it according to the current operating mode.
+- Two LEDs indicate the current mode, while the buzzer provides feedback. The servo motor simulates unlocking.
 
-可以將 **RFID** 感應卡靠近 **RDM6300**，**RDM6300** 會讀取卡片內容進行判斷，並將執行結果透過 **TTL** 線，顯示於電腦上。基於不同的狀態，會有不同的結果，以下為各個狀態的簡單介紹：
+### Demo
 
-#### 註冊狀態
-此狀態的燈泡呈現如下：  
-  |                                   LED1                                    |                                   LED2                                    |
-  |---------------------------------------------------------------------------|---------------------------------------------------------------------------|
-  | <img src="./Images/States/LED on.png" alt="Check" width="50" height="70"> | <img src="./Images/States/LED on.png" alt="Check" width="50" height="70"> |
- 
-執行結果有數種可能：
-* 成功註冊：正確操作
-* ID 卡號已註冊：錯誤操作
-* ID 資料庫已滿：錯誤操作
-* ID 讀取不正確：錯誤操作
+[Watch Demo Video](./Video/Demo_Video.mp4)
 
-#### 註銷狀態
-此狀態的燈泡呈現如下：  
-  |                                   LED1                                    |                                    LED2                                    |
-  |---------------------------------------------------------------------------|----------------------------------------------------------------------------|
-  | <img src="./Images/States/LED on.png" alt="Check" width="50" height="70"> | <img src="./Images/States/LED off.png" alt="Check" width="50" height="70"> |
+### Notes
+- A dual-microcontroller architecture is used because the PIC18F4520 has only one timer, `TMR2`, available for PWM operation, while both the buzzer and servo require PWM.  
+- The two PIC18F4520 devices communicate via UART, with a computer acting as an intermediary.
 
-執行結果有數種可能：
-* 成功註銷：正確操作
-* 未找到 ID 卡號：錯誤操作
-* ID 資料庫為空：錯誤操作
-* ID 讀取不正確：錯誤操作
+## Operating Modes
 
-#### 檢查狀態
-此狀態的燈泡呈現如下：  
-  |                                    LED1                                    |                                    LED2                                   |
-  |----------------------------------------------------------------------------|---------------------------------------------------------------------------|
-  | <img src="./Images/States/LED off.png" alt="Check" width="50" height="70"> | <img src="./Images/States/LED on.png" alt="Check" width="50" height="70"> |
+The system provides three operating modes:
 
-執行結果有數種可能：
-* 檢查成功：正確操作
-* 未找到 ID 卡號：錯誤操作
-* ID 讀取不正確：錯誤操作
+| Mode           | LED1 | LED2 | Function                                 |
+| -------------- | :--: | :--: | ---------------------------------------- |
+| **Register**   |  ON  |  ON  | Add an RFID ID to the database           |
+| **Deregister** |  ON  |  OFF | Remove an RFID ID from the database      |
+| **Check**      |  OFF |  ON  | Verify an RFID ID and simulate unlocking |
 
-蜂鳴器會在 **正確操作** 和 **錯誤操作** 時，發出不同的聲響，以提醒使用者操作是否錯誤。  
-伺服馬達則會在 **檢查模式的正確操作** 時轉動，用以模擬開鎖動作。
+The push button switches between Register and Deregister modes,   
+while the variable resistor switches between Check mode and the Register/Deregister modes.
 
-## Components
+### Register Mode
 
-<details>
-  <summary>PIC18F4520</summary>
+| Result                  | Status  |
+| ----------------------- | ------- |
+| Registration Successful | Success |
+| ID Already Registered   | Error   |
+| ID Database Full        | Error   |
+| Invalid ID              | Error   |
 
-  <img src="./Images/Components/PIC18F4520.jpg" alt="PIC18F4520" width="350" height="233">
-  <img src="./Images/Components/PIC18F4520 Pinout Diagram.png" alt="Pinout Diagram" width="350">
+### Deregister Mode
 
-  * 由於 **SG90 Motor** 跟 **Buzzer** 均需要使用 **PWM** 模式，故需要使用兩個 **PIC18F450** 晶片
-    > 大部分元件都是接在第一個晶片（下面以 **Device1** 稱呼），只有 **TTL** 與 **Motor** 接在第二個晶片（以 **Device2** 稱呼）。  
-    > 兩個晶片透過 **UART** 傳遞資訊，**Device1** 會先將資訊傳遞給電腦，再由電腦傳遞訊號給 **Device2**。
+| Result                    | Status  |
+| ------------------------- | ------- |
+| Deregistration Successful | Success |
+| ID Not Found              | Error   |
+| ID Database Empty         | Error   |
+| Invalid ID                | Error   |
 
-</details>
+### Check Mode
 
-<details>
-  <summary>RDM6300</summary>
+| Result           | Status                 |
+| ---------------- | ---------------------- |
+| Check Successful | Success + Servo Unlock |
+| ID Not Found     | Error                  |
+| Invalid ID       | Error                  |
 
-  <img src="./Images/Components/RFID%20RDM6300%20Pinout%20Diagram.png" alt="RDM6300 PINOUT" width="280">
-  <img src="./Images/Components/RDM6300%20Copper%20Coil.jpg" alt="RDM6300 Coil" width="200">
-  <img src="./Images/Components/125kHz RFID Card.jpg" alt="125kHz RFID Card" width="320" height="200">
+A different buzzer sound is played for successful and failed operations.  
+In **Check Mode**, a successful verification activates the servo motor to simulate unlocking.
 
 
-  |   RDM6300 Pin   |      Coil      |   PIC18F4520(1)    |
-  |-----------------|----------------|--------------------|
-  | `ANT1`          |  `Black Line`  |         X          |
-  | `ANT2`          |   `Red Line`   |         X          |
-  | `Vcc (below)`   |       X        |       `Vdd`        |
-  | `GND (below)`   |       X        |       `Vss`        |
-  | `TX`            |       X        |      `RC7/RX`      |
+## Circuit Diagram
+![Circuit Diagram](./Images/Circuit%20Diagram.png)
 
-</details>
-<details>
-  <summary>Button</summary>
+## Hardware Components
 
-  <img src="./Images/Components/Button.jpg" alt="Button" width="200">
+### PIC18F4520
 
-  |      Button      |                                                                         PIC18F4520(1)                                                                        |
-  |------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-  |   ``One side``   | ``RB0/INT0`` → ``Resistor`` → ``Vdd``<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ ``One side``|
-  | ``Another side`` |                                                                           ``Vss``                                                                            |
+Two **PIC18F4520** microcontrollers are used in this project.
 
-</details>
-<details>
-  <summary>LED</summary>
+<img src="./Images/Components/PIC18F4520.jpg" alt="PIC18F4520" height="200"> <img src="./Images/Components/PIC18F4520 Pinout Diagram.png" alt="PIC18F4520 Pinout" height="200">
 
-  <img src="./Images/Components/LED.jpg" alt="LED" width="200">
+* **Device 1** handles the main system logic, including RFID reading, mode selection, LEDs, button, variable resistor, and buzzer.
+* **Device 2** handles the USB-to-TTL interface and SG90 servo motor.
+* The two devices communicate via UART.
 
-  |      LED1      |               PIC18F4520(1)             |
-  |----------------|-----------------------------------------|
-  |  ``Long Leg``  |``RA1/AN1`` → ``Resistor`` → ``Long Leg``|
-  |  ``Short Leg`` |                 ``Vss``                 |
+> The dual-microcontroller architecture allows the buzzer and servo to use PWM independently.
 
-  |      LED2      |               PIC18F4520(1)             |
-  |----------------|-----------------------------------------|
-  |  ``Long Leg``  |``RA2/AN2`` → ``Resistor`` → ``Long Leg``|
-  |  ``Short Leg`` |                 ``Vss``                 |
-  
-</details>
-<details>
-  <summary>Buzzer</summary>
-  
-  <img src="./Images/Components/Buzzer.jpg" alt="Buzzer" width="200">
+### RDM6300 RFID Reader
 
-  |  Buzzer |  PIC18F4520(1)  |
-  |---------|-----------------|
-  | ``Vcc`` |     ``Vdd``     |
-  | ``GND`` |     ``Vss``     |
-  | ``I/O`` |   ``RC2/CCP1``  |
-  
-</details>
-<details>
-  <summary>Variable Resistor</summary>
+The **RDM6300** is a 125 kHz RFID reader used to read the card ID.
 
-  <img src="./Images/Components/Variable Resistor.jpg" alt="Variable Resistor" width="200" height="200">
+<img src="./Images/Components/RFID%20RDM6300%20Pinout%20Diagram.png" alt="RDM6300 PINOUT" width="280"> <img src="./Images/Components/RDM6300%20Copper%20Coil.jpg" alt="RDM6300 Coil" width="200"> <img src="./Images/Components/125kHz RFID Card.jpg" alt="125kHz RFID Card" width="320" height="200">
 
-  | Variable Resistor | PIC18F4520(1) |
-  |-------------------|---------------|
-  |   ``One side``    |    ``Vdd``    |
-  |    ``Center``     |  ``RA0/AN0``  |
-  | ``Another side``  |    ``Vss``    |
-  
-</details>
+| RDM6300 | Connection        |
+| ------- | ----------------- |
+| `ANT1`  | Coil — Black Wire |
+| `ANT2`  | Coil — Red Wire   |
+| `VCC (below)`   | Device 1 `VDD`    |
+| `GND (below)`   | Device 1 `VSS`    |
+| `TX`    | Device 1 `RC7/RX` |
 
-<details>
-  <summary>USB to TTL Serial Cable</summary>
+### Push Button
 
-  <img src="./Images/Components/USB to TTL Cable.jpg" alt="TTL Cable" width="200" height="200">
+The push button is used to switch between operating modes.
 
-  |  TTL Cable |PIC18F4520(1)|PIC18F4520(2)|
-  |------------|-------------|-------------|
-  |  ``Red``   |   ``Vdd``   |      X      |
-  |  ``Black`` |   ``Vss``   |      X      |
-  |  ``Green`` |      X      |  ``RC7/RX`` |
-  |  ``White`` |  ``RC6/TX`` |      X      |
+<img src="./Images/Components/Button.jpg" alt="Button" width="200">
 
-</details>
+| Button     | Connection                    |
+| ---------- | ----------------------------- |
+| One side   | `RB0/INT0`                    |
+| Other side | `VSS`                         |
+| Pull-up    | `RB0/INT0` → Resistor → `VDD` |
 
-<details>
-  <summary>SG90 Servo Motor</summary>
+### LEDs
 
-  <img src="./Images/Components/SG90 Servo Motor.jpg" alt="TTL Cable" width="200" height="200">
+Two LEDs indicate the current operating mode.
 
-  |     SG90    |   PIC18F4520(2) |
-  |-------------|-----------------|
-  |  ``Orange`` |   ``RC2/CCP1``  |
-  |   ``Red``   |     ``Vdd``     |
-  |  ``Brown``  |     ``Vss``     |
+<img src="./Images/Components/LED.jpg" alt="LED" width="200">
 
-</details>
+|  LED | PIC18F4520 |
+|------|------------------------------|
+| LED1 | `RA1/AN1` → Resistor → Anode |
+| LED2 | `RA2/AN2` → Resistor → Anode |
+
+Both LED cathodes are connected to `VSS`.
+
+### Buzzer
+
+The buzzer provides audio feedback for successful and failed operations. 
+
+<img src="./Images/Components/Buzzer.jpg" alt="Buzzer" width="200">
+
+| Buzzer | PIC18F4520 |
+| ------ | ---------- |
+| `VCC`  | `VDD`      |
+| `GND`  | `VSS`      |
+| `I/O`  | `RC2/CCP1` |
+
+### Variable Resistor
+
+The variable resistor is used for operating-mode selection through the ADC.
+
+<img src="./Images/Components/Variable Resistor.jpg" alt="Variable Resistor" width="200" height="200">
+
+| Variable Resistor | PIC18F4520 |
+| ----------------- | ---------- |
+| One side          | `VDD`      |
+| Center            | `RA0/AN0`  |
+| Other side        | `VSS`      |
+
+### USB-to-TTL Serial Cable
+
+The USB-to-TTL cable connects the system to the computer for serial communication.
+
+<img src="./Images/Components/USB to TTL Cable.jpg" alt="TTL Cable" width="200" height="200">
+
+| TTL Wire | Device 1 | Device 2 |
+| -------- | -------- | -------- |
+| Red      | `VDD`    | ✗        |
+| Black    | `VSS`    | ✗        |
+| Green    | ✗        | `RC7/RX` |
+| White    | `RC6/TX` | ✗        |
+
+### SG90 Servo Motor
+
+The SG90 servo simulates the physical unlocking mechanism.
+
+<img src="./Images/Components/SG90 Servo Motor.jpg" alt="TTL Cable" width="200" height="200">
+
+| SG90 Wire | PIC18F4520 |
+| --------- | ---------- |
+| Orange    | `RC2/CCP1` |
+| Red       | `VDD`      |
+| Brown     | `VSS`      |

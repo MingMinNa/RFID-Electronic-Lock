@@ -4,7 +4,8 @@
 #include <pic18f4520.h>
 
 // Variable Resistor
-void resistor_init(){
+void resistor_init()
+{
     TRISAbits.TRISA0 = 1;
     
     ADCON1bits.VCFG0 = 0;    // use Vdd as reference voltage(V-)
@@ -22,8 +23,8 @@ void resistor_init(){
     ADCON0bits.GO = 1;
 }
 
-int get_resistor_value(){
-    
+int get_resistor_value()
+{    
     ADCON0bits.CHS = 0b0000; // Analog Channel Select Bit: choose AN0
     ADCON0bits.GO = 1;
     

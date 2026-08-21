@@ -4,7 +4,8 @@
 
 unsigned char digit = 0;
 
-void led_init(){
+void led_init()
+{
     TRISAbits.TRISA1 = 0;
     TRISAbits.TRISA2 = 0;
     
@@ -13,8 +14,9 @@ void led_init(){
     LATAbits.LATA2 = (digit / 2) % 2;
 }
 
-void led_output_digit(unsigned char _digit){
-    if( 0 <= digit && digit <= 3){
+void led_output_digit(unsigned char _digit)
+{
+    if (0 <= digit && digit <= 3) {
         digit = _digit;
         LATAbits.LATA1 = digit % 2;
         LATAbits.LATA2 = (digit / 2) % 2;

@@ -3,7 +3,8 @@
 #include <xc.h>
 #include <pic18f4520.h>
 
-void button_init(int use_Interrupt){
+void button_init(int use_Interrupt)
+{
     ADCON1 = 0x0E;
     TRISBbits.TRISB0 = 1;
     LATBbits.LATB0 = 0;

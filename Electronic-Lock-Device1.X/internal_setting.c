@@ -18,7 +18,8 @@ int TMR2_repeat = 0;
 int frequency = 0;
 
 /* Timer */
-void TMR1_init(int prescaler, int init_val){
+void TMR1_init(int prescaler, int init_val)
+{
     /*
     delay 0.5s(TMR1_Interrupt) in different oscillator frequency
         8MHz    : prescaler(8), init_val(65536 - 62500 = 3036)  => Must use another counter from 0 ~ 1 (2 times)
@@ -39,10 +40,11 @@ void TMR1_init(int prescaler, int init_val){
             
     T1CON &= 0xF0;
     // prescaler: 1, 2, 4, 8
-    if(prescaler == 2 || prescaler == 8)   T1CONbits.T1CKPS1 = 1;
-    else                                   T1CONbits.T1CKPS1 = 0;
-    if(prescaler == 4 || prescaler == 8)   T1CONbits.T1CKPS0 = 1;
-    else                                   T1CONbits.T1CKPS0 = 0;
+    if (prescaler == 2 || prescaler == 8) T1CONbits.T1CKPS1 = 1;
+    else                                  T1CONbits.T1CKPS1 = 0;
+
+    if (prescaler == 4 || prescaler == 8) T1CONbits.T1CKPS0 = 1;
+    else                                  T1CONbits.T1CKPS0 = 0;
     
     TMR1_prescaler = prescaler;
     TMR1_init_val = init_val;
@@ -50,14 +52,16 @@ void TMR1_init(int prescaler, int init_val){
     T1CONbits.TMR1ON = 1;
 }
 
-void TMR1_restart(){
+void TMR1_restart()
+{
     T1CONbits.TMR1ON = 0;
     TMR1H = (unsigned char)(TMR1_init_val / 0xFF);
     TMR1L = (unsigned char)(TMR1_init_val % 0xFF);
     T1CONbits.TMR1ON = 1;
 }
 
-void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
+void TMR2_init(int prescaler, int postscaler, unsigned char _PR2)
+{
     /*
     delay 0.5s(TMR2_Interrupt) in different oscillator frequency
         8MHz    : prescaler(16), postscaler(16), _PR2(39)  => Must use another counter from 0 ~ 99 (100 times) 
@@ -74,10 +78,11 @@ void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
     PIE1bits.TMR2IE = 1; 
     
     // prescaler: 1 ~ 16, postscaler: 1, 4, 16
-    if(prescaler == 1)      T2CONbits.T2CKPS = 0b00;
-    else if(prescaler == 4) T2CONbits.T2CKPS = 0b01;
-    else if(prescaler == 16)T2CONbits.T2CKPS = 0b11;
-    else                    T2CONbits.T2CKPS = 0b00;
+    if      (prescaler == 1 ) T2CONbits.T2CKPS = 0b00;
+    else if (prescaler == 4 ) T2CONbits.T2CKPS = 0b01;
+    else if (prescaler == 16) T2CONbits.T2CKPS = 0b11;
+    else                      T2CONbits.T2CKPS = 0b00;
+    
     T2CONbits.T2OUTPS = (unsigned char)(postscaler - 1);
     
     TMR2_prescaler = prescaler;
@@ -88,13 +93,15 @@ void TMR2_init(int prescaler, int postscaler, unsigned char _PR2){
 
 
 /* CCP */
-void CCP1_init(){
+void CCP1_init()
+{
     CCP1CONbits.CCP1M = 0b1100;
 }
 
 
 /* Oscillator */
-void oscillator_init(int _frequency){
+void oscillator_init(int _frequency)
+{
     frequency = _frequency;
     IRCF2 = (unsigned char)(_frequency / 4) % 2;
     IRCF1 = (unsigned char)(_frequency / 2) % 2;
@@ -102,13 +109,15 @@ void oscillator_init(int _frequency){
 }
 
 /* Interrupt */
-void interrupt_init(){
+void interrupt_init()
+{
     RCONbits.IPEN = 1;      //enable Interrupt Priority mode
     INTCONbits.GIEH = 1;    //enable high priority interrupt
     INTCONbits.GIEL = 1;    //enable low priority interrupt
 }
 
-void INT0_open(){
+void INT0_open()
+{
     // INT0 is high priority interrupt
     INTCONbits.INT0IF = 0;
     INTCONbits.INT0IE = 1;

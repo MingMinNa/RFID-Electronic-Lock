@@ -3,7 +3,8 @@
 #include <xc.h>
 #include <pic18f4520.h>
 
-void buzzer_init() {
+void buzzer_init() 
+{
     TMR2_init(16, 1, 124);
     
     CCP1CONbits.CCP1M = 0b1100;
@@ -14,21 +15,22 @@ void buzzer_init() {
     TRISCbits.TRISC2 = 0;
 }
 
-void buzzer_on(unsigned char accept){
-    if(accept == 1)
-        PR2 = 100;
-    else
-        PR2 = 255;
+void buzzer_on(unsigned char accept)
+{
+    if(accept == 1) PR2 = 100;
+    else            PR2 = 255;
     CCPR1L = 62;
 }
 
-void buzzer_off() {
+void buzzer_off() 
+{
     CCPR1L = 0;  
 }
 
-void buzzer_accept(){
+void buzzer_accept()
+{
     LATAbits.LATA2 = 0;
-    for(int i = 0; i < 2; ++i){
+    for (int i = 0; i < 2; ++i) {
         buzzer_on(1);
         __delay_ms(250);
         buzzer_off();
@@ -37,7 +39,8 @@ void buzzer_accept(){
     LATAbits.LATA2 = 1;
 }
 
-void buzzer_reject(){
+void buzzer_reject()
+{
     LATAbits.LATA2 = 0;
     buzzer_on(0);
     __delay_ms(750);
